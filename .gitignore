@@ -1,0 +1,7 @@
+/.idea
+/*.iml
+/target
+/temp-testng-customsuite.xml
+/test-output
+/logs
+/*.log
