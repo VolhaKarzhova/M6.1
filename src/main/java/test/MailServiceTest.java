@@ -1,6 +1,7 @@
 package test;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -49,7 +50,7 @@ public class MailServiceTest extends BaseTest {
         Assert.assertTrue(mailContent.contains(MAILBODY));
     }
 
-    @Test(dependsOnMethods = {"verifyDraftMailContent"})
+    @Test(dependsOnMethods = {"verifyDraftMailContent"}, expectedExceptions = NoSuchElementException.class)
     public void sendMailFromDraftFolder() {
         driver.switchTo().defaultContent();
         new WebDriverWait(driver, 5)
