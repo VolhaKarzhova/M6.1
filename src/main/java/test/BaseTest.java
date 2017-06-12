@@ -1,25 +1,15 @@
 package test;
 
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeGroups;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
 
     protected WebDriver driver;
-    protected static final String URL = "https://mail.ru";
-    protected static final String LOGIN = "volhakarzhova";
-    protected static final String PASSWORD = "1584624Qwe";
-    protected static final String ADDRESSEE = "volhakarzhova@mail.ru";
-    protected static final String SUBJECT = "mail number: " + new Random().nextInt(5000);
-    protected static final String MAILBODY = "This is a new email " + new Random().nextInt(5000);
 
     @BeforeClass
     public void setUp() {
