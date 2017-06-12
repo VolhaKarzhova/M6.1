@@ -11,13 +11,13 @@ import java.util.Random;
 
 public class MailRuTest extends BaseTest {
 
-    protected static final String URL = "https://mail.ru";
-    protected static final String USER_LOGIN = "volhakarzhova";
-    protected static final String USER_PASSWORD = "1584624Qwe";
-    protected static final String ADDRESSEE = "volhakarzhova@mail.ru";
-    protected static final String MAIL_SUBJECT = "mail number: " + new Random().nextInt(5000);
-    protected static final String MAIL_BODY = "This is a new email " + new Random().nextInt(5000);
-    public String mailSubjectPattern = String.format("//*[@data-subject='%s']", MAIL_SUBJECT);
+    private static final String URL = "https://mail.ru";
+    private static final String USER_LOGIN = "volhakarzhova";
+    private static final String USER_PASSWORD = "1584624Qwe";
+    private static final String ADDRESSEE = "volhakarzhova@mail.ru";
+    private static final String MAIL_SUBJECT = "mail number: " + new Random().nextInt(5000);
+    private static final String MAIL_BODY = "This is a new email " + new Random().nextInt(5000);
+    private String mailSubjectPattern = String.format("//*[@data-subject='%s']", MAIL_SUBJECT);
 
     @Test
     public void logIn() {
