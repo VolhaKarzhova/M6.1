@@ -1,5 +1,11 @@
 package pageObject.pages;
 
 
-public class SentFolderPage {
+import org.openqa.selenium.WebDriver;
+
+public class SentFolderPage extends AbstractPage {
+
+    public SentFolderPage(WebDriver driver) {
+        super(driver);
+    }
 }

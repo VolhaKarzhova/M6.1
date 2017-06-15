@@ -1,5 +1,11 @@
 package pageObject.pages;
 
 
-public class DeletedFolderPage {
+import org.openqa.selenium.WebDriver;
+
+public class DeletedFolderPage extends AbstractPage {
+
+    public DeletedFolderPage(WebDriver driver) {
+        super(driver);
+    }
 }

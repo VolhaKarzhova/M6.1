@@ -2,38 +2,39 @@ package pageObject.tests;
 
 
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import pageObject.pages.InboxFolderPage;
+import pageObject.pages.GlobalParametersPage;
+import pageObject.pages.HeaderMenuPage;
 import pageObject.pages.LoginPage;
 
 public class LoginTest extends BaseTest {
 
     @Test
     public void loginWithValidCredentials() {
-        new LoginPage(driver).open().fillLoginInput(LoginPage.USER_LOGIN)
-                .fillPasswordInput(LoginPage.USER_PASSWORD).getAuthorizationIntoMailBox();
-        String authorization = new InboxFolderPage(driver).getAuthorizationProof();
-        Assert.assertTrue(authorization.startsWith(LoginPage.USER_LOGIN), "Login wasn't successful");
+        new LoginPage(driver).login(GlobalParametersPage.USER_LOGIN, GlobalParametersPage.USER_PASSWORD);
+        String authorization = new HeaderMenuPage(driver).getUserLogin();
+        Assert.assertTrue(authorization.startsWith(GlobalParametersPage.USER_LOGIN), "Login wasn't successful");
     }
 
-    @Test(priority = 1)
-    public void loginWithInvalidLogin() {
-        new InboxFolderPage(driver).logout();
-        boolean failMessage = new LoginPage(driver).clearLoginInput().fillLoginInput("karzhova")
-                .fillPasswordInput(LoginPage.USER_PASSWORD).getAuthenticationFailMessage();
-        Assert.assertTrue(failMessage, "There is no login fail message on the page");
+    @Test(dataProvider = "credentialsDataProvider", priority = 1)
+    @Parameters({"login", "password", "expectedErrorMessage"})
+    public void loginWithInvalidLogin(String login, String password, String expectedErrorMessage) {
+        new HeaderMenuPage(driver).logout();
+        new LoginPage(driver).login(login, password);
+        String errorMessage = new LoginPage(driver).getErrorMessage();
+        Assert.assertEquals(errorMessage, expectedErrorMessage, "Error message doesn't match");
     }
 
-    @Test(priority = 2)
-    public void loginWithInvalidPassword() {
-        boolean failMessage = new LoginPage(driver).clearLoginInput().clearPasswordInput()
-                .fillLoginInput(LoginPage.USER_LOGIN).fillPasswordInput("123456").getAuthenticationFailMessage();
-        Assert.assertTrue(failMessage, "There is no login fail message on the page");
-    }
-
-    @Test(priority = 3)
-    public void loginWithEmptyInputs() {
-        boolean failMessage = new LoginPage(driver).clearLoginInput().clearPasswordInput().getAuthenticationFailMessage();
-        Assert.assertTrue(failMessage, "There is no login fail message on the page");
+    @DataProvider(name = "credentialsDataProvider")
+    public Object[][] credentialsDataProvider() {
+        return new Object[][]{
+                {"volha", GlobalParametersPage.USER_PASSWORD, LoginPage.INVALID_CREDENTIALS_ERROR_MESSAGE},
+                {GlobalParametersPage.USER_LOGIN, "12345", LoginPage.INVALID_CREDENTIALS_ERROR_MESSAGE},
+                {"", "", LoginPage.BLANK_INPUTS_ERROR_MESSAGE},
+                {GlobalParametersPage.USER_LOGIN, "", LoginPage.BLANK_PASSWORD_ERROR_MESSAGE},
+                {"", GlobalParametersPage.USER_PASSWORD, LoginPage.BLANK_LOGIN_ERROR_MESSAGE},
+        };
     }
 }

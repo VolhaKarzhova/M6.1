@@ -7,50 +7,28 @@ public class LoginPage extends AbstractPage {
 
     private static final By LOGIN_INPUT_LOCATOR = By.id("mailbox__login");
     private static final By PASSWORD_INPUT_LOCATOR = By.cssSelector("#mailbox__password");
-    private static final By AUTHENTICATION_FAIL_MESSAGE_LOCATOR = By.xpath("//*[@id='mailbox:authfail']");
-    static final By LOGIN_BUTTON_LOCATOR = By.className("mailbox__auth__button");
-    private static final String URL = "https://mail.ru";
-    public static final String USER_LOGIN = "volhakarzhova";
-    public static final String USER_PASSWORD = "1584624Qwe";
+    private static final By AUTHENTICATION_ERROR_MESSAGE_LOCATOR = By.xpath("//*[@id='mailbox:authfail']");
+    public static final By LOGIN_BUTTON_LOCATOR = By.className("mailbox__auth__button");
+    public static final String BLANK_INPUTS_ERROR_MESSAGE = "Введите имя ящика";
+    public static final String INVALID_CREDENTIALS_ERROR_MESSAGE = "Неверное имя или пароль";
+    public static final String BLANK_LOGIN_ERROR_MESSAGE = "Введите имя ящика";
+    public static final String BLANK_PASSWORD_ERROR_MESSAGE = "Введите пароль";
 
     public LoginPage(WebDriver driver) {
         super(driver);
     }
 
-    public LoginPage open() {
-        driver.get(URL);
-        return this;
-    }
-
-    public LoginPage fillLoginInput(String login) {
-        driver.findElement(LOGIN_INPUT_LOCATOR).sendKeys(login);
-        return this;
-    }
-
-    public LoginPage fillPasswordInput(String password) {
-        driver.findElement(PASSWORD_INPUT_LOCATOR).sendKeys(password);
-        return this;
-    }
-
-    public InboxFolderPage getAuthorizationIntoMailBox() {
-        driver.findElement(LOGIN_BUTTON_LOCATOR).click();
-        return new InboxFolderPage(driver);
-    }
-
-    public boolean getAuthenticationFailMessage() {
-        driver.findElement(LOGIN_BUTTON_LOCATOR).click();
-        waitForElementVisible(AUTHENTICATION_FAIL_MESSAGE_LOCATOR);
-        driver.findElement(AUTHENTICATION_FAIL_MESSAGE_LOCATOR).isDisplayed();
-        return true;
-    }
-
-    public LoginPage clearLoginInput() {
+    public HeaderMenuPage login(String login, String password) {
         driver.findElement(LOGIN_INPUT_LOCATOR).clear();
-        return this;
+        driver.findElement(LOGIN_INPUT_LOCATOR).sendKeys(login);
+        driver.findElement(PASSWORD_INPUT_LOCATOR).clear();
+        driver.findElement(PASSWORD_INPUT_LOCATOR).sendKeys(password);
+        driver.findElement(LOGIN_BUTTON_LOCATOR).click();
+        return new HeaderMenuPage(driver);
     }
 
-    public LoginPage clearPasswordInput() {
-        driver.findElement(PASSWORD_INPUT_LOCATOR).clear();
-        return this;
+    public String getErrorMessage() {
+        waitForElementVisible(AUTHENTICATION_ERROR_MESSAGE_LOCATOR);
+        return driver.findElement(AUTHENTICATION_ERROR_MESSAGE_LOCATOR).getText();
     }
 }
