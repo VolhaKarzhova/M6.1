@@ -5,10 +5,13 @@ import org.openqa.selenium.WebDriver;
 
 public class NewLetterPage extends AbstractPage {
 
+
     private static final By ADDRESSEE_INPUT_LOCATOR = By.xpath("//*[@data-original-name='To']");
     private static final By SUBJECT_INPUT_LOCATOR = By.name("Subject");
     private static final By MAIL_BODY_INPUT_LOCATOR = By.cssSelector("#tinymce");
     private static final By FRAME_NAME = By.xpath("//iframe[contains(@id, 'composeEditor')]");
+    private static final By SEND_BUTTON_LOCATOR = By.xpath("//div[@data-name='send']");
+    private static final By SAVE_DRAFT_BUTTON_LOCATOR = By.xpath("//div[contains(@data-name, 'saveDraft')]");
 
     public NewLetterPage(WebDriver driver) {
         super(driver);
@@ -29,5 +32,16 @@ public class NewLetterPage extends AbstractPage {
         driver.findElement(MAIL_BODY_INPUT_LOCATOR).sendKeys(body);
         driver.switchTo().defaultContent();
         return this;
+    }
+
+    public NewLetterPage saveDraftMail() {
+        driver.findElement(SAVE_DRAFT_BUTTON_LOCATOR).click();
+        return this;
+    }
+
+    public MailStatusPage sendMail() {
+        driver.findElement(SEND_BUTTON_LOCATOR).click();
+        waitForElementVisible(MailStatusPage.SENT_MAIL_MESSAGE_LOCATOR);
+        return new MailStatusPage(driver);
     }
 }

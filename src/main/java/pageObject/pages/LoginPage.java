@@ -19,6 +19,7 @@ public class LoginPage extends AbstractPage {
     }
 
     public HeaderMenuPage login(String login, String password) {
+        waitForElementVisible(LOGIN_INPUT_LOCATOR);
         driver.findElement(LOGIN_INPUT_LOCATOR).clear();
         driver.findElement(LOGIN_INPUT_LOCATOR).sendKeys(login);
         driver.findElement(PASSWORD_INPUT_LOCATOR).clear();

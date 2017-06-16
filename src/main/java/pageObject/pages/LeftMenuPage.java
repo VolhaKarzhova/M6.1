@@ -2,6 +2,7 @@ package pageObject.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import pageObject.config.GlobalParameters;
 
 public class LeftMenuPage extends AbstractPage {
 
@@ -13,21 +14,21 @@ public class LeftMenuPage extends AbstractPage {
         super(driver);
     }
 
-    public InboxFolderPage openInboxFolder() {
+    public MailListPage openInboxFolder() {
         waitForElementEnabled(INBOX_MAIL_FOLDER_LOCATOR);
         driver.findElement(INBOX_MAIL_FOLDER_LOCATOR).click();
-        waitForElementPresent(By.xpath(GlobalParametersPage.MAIL_SUBLECT_PATTERN));
-        return new InboxFolderPage(driver);
+        waitForElementPresent(By.xpath(GlobalParameters.MAIL_SUBJECT_PATTERN));
+        return new MailListPage(driver);
     }
 
-    public SentFolderPage openSentFolder() {
+    public MailListPage openSentFolder() {
         waitForElementEnabled(SENT_MAIL_FOLDER_LOCATOR);
         driver.findElement(SENT_MAIL_FOLDER_LOCATOR).click();
-        return new SentFolderPage(driver);
+        return new MailListPage(driver);
     }
 
-    public DraftFolderPage openDraftFolder() {
+    public MailListPage openDraftFolder() {
         driver.findElement(DRAFT_MAIL_FOLDER_LOCATOR).click();
-        return new DraftFolderPage(driver);
+        return new MailListPage(driver);
     }
 }

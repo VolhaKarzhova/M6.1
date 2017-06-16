@@ -7,9 +7,7 @@ public class HeaderMenuPage extends AbstractPage {
 
     private static final By NEW_LETTER_BUTTON_LOCATOR = By.cssSelector("a[data-name='compose']");
     private static final By AUTHORIZATION_USER_LOCATOR = By.cssSelector("#PH_user-email");
-    private static final By LOGOUT_LINK_LOCATOR = By.xpath("//*[@id='PH_logoutLink']");
-    private static final By SEND_BUTTON_LOCATOR = By.xpath("//div[@data-name='send']");
-    private static final By SAVE_DRAFT_BUTTON_LOCATOR = By.xpath("//div[contains(@data-name, 'saveDraft')]");
+    public static final By LOGOUT_LINK_LOCATOR = By.xpath("//*[@id='PH_logoutLink']");
 
     public HeaderMenuPage(WebDriver driver) {
         super(driver);
@@ -32,14 +30,4 @@ public class HeaderMenuPage extends AbstractPage {
         return new NewLetterPage(driver);
     }
 
-    public NewLetterPage saveDraftMail() {
-        driver.findElement(SAVE_DRAFT_BUTTON_LOCATOR).click();
-        return new NewLetterPage(driver);
-    }
-
-    public MailStatusPage sendMail() {
-        driver.findElement(SEND_BUTTON_LOCATOR).click();
-        waitForElementVisible(MailStatusPage.SENT_MAIL_MESSAGE_LOCATOR);
-        return new MailStatusPage(driver);
-    }
 }
