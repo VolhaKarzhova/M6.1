@@ -29,5 +29,4 @@ public class HeaderMenuPage extends AbstractPage {
         driver.findElement(NEW_LETTER_BUTTON_LOCATOR).click();
         return new NewLetterPage(driver);
     }
-
 }

@@ -7,16 +7,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AbstractPage {
 
-    private static final int WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 15;
+    private static final int WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 10;
 
     protected WebDriver driver;
 
     public AbstractPage(WebDriver driver) {
         this.driver = driver;
-    }
-
-    public boolean isElementPresent(By locator) {
-        return !driver.findElements(locator).isEmpty();
     }
 
     protected void waitForElementPresent(By locator) {
@@ -29,5 +25,13 @@ public class AbstractPage {
 
     protected void waitForElementEnabled(By locator) {
         new WebDriverWait(driver, WAIT_FOR_ELEMENT_TIMEOUT_SECONDS).until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    protected void waitForElementDisappear(By locator) {
+        new WebDriverWait(driver, WAIT_FOR_ELEMENT_TIMEOUT_SECONDS).until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    protected void waitForAlertDisplayed() {
+        new WebDriverWait(driver, WAIT_FOR_ELEMENT_TIMEOUT_SECONDS).until(ExpectedConditions.alertIsPresent());
     }
 }

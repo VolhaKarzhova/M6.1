@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 
 public class NewLetterPage extends AbstractPage {
 
+    public LeftMenuPage leftMenuPage = new LeftMenuPage(driver);
 
     private static final By ADDRESSEE_INPUT_LOCATOR = By.xpath("//*[@data-original-name='To']");
     private static final By SUBJECT_INPUT_LOCATOR = By.name("Subject");
@@ -12,22 +13,20 @@ public class NewLetterPage extends AbstractPage {
     private static final By FRAME_NAME = By.xpath("//iframe[contains(@id, 'composeEditor')]");
     private static final By SEND_BUTTON_LOCATOR = By.xpath("//div[@data-name='send']");
     private static final By SAVE_DRAFT_BUTTON_LOCATOR = By.xpath("//div[contains(@data-name, 'saveDraft')]");
+    public static final String ALERT_EMPTY_BODY_MESSAGE = "Вы уверены, что хотите отправить пустое письмо?";
+    public static final String ALERT_INVALID_ADDRESSEE_MESSAGE = "В поле «Кому» указан некорректный адрес получателя.\n" +
+            "Исправьте ошибку и отправьте письмо ещё раз.";
+    private static final By ALERT_EMPTY_BODY_LOCATOR = By.xpath("//div[@class='is-compose-empty_in']//div[@class='popup__desc']");
+    private static final By ALERT_CONFIRM_BUTTON_LOCATOR = By.xpath("//div[@class='is-compose-empty_in']//button[contains(@class, 'confirm-ok')]");
+    private static final By SAVED_AS_DRAFT_MESSAGE_LOCATOR = By.xpath("//div[@class='b-toolbar__message']/a");
 
     public NewLetterPage(WebDriver driver) {
         super(driver);
     }
 
-    public NewLetterPage fillAddresseeInput(String addressee) {
+    public NewLetterPage fillAllLetterInputs(String addressee, String subject, String body) {
         driver.findElement(ADDRESSEE_INPUT_LOCATOR).sendKeys(addressee);
-        return this;
-    }
-
-    public NewLetterPage fillSubjectInput(String subject) {
         driver.findElement(SUBJECT_INPUT_LOCATOR).sendKeys(subject);
-        return this;
-    }
-
-    public NewLetterPage fillMailBodyInput(String body) {
         driver.switchTo().frame(driver.findElement(FRAME_NAME));
         driver.findElement(MAIL_BODY_INPUT_LOCATOR).sendKeys(body);
         driver.switchTo().defaultContent();
@@ -36,12 +35,28 @@ public class NewLetterPage extends AbstractPage {
 
     public NewLetterPage saveDraftMail() {
         driver.findElement(SAVE_DRAFT_BUTTON_LOCATOR).click();
+        waitForElementEnabled(SAVED_AS_DRAFT_MESSAGE_LOCATOR);
         return this;
     }
 
     public MailStatusPage sendMail() {
         driver.findElement(SEND_BUTTON_LOCATOR).click();
-        waitForElementVisible(MailStatusPage.SENT_MAIL_MESSAGE_LOCATOR);
         return new MailStatusPage(driver);
+    }
+
+    public String getEmptyLetterBodyAlertMessage() {
+        return driver.findElement(ALERT_EMPTY_BODY_LOCATOR).getText();
+    }
+
+    public MailStatusPage clickConfirmButtonOnAlertMessageToSendLetter() {
+        waitForElementEnabled(ALERT_CONFIRM_BUTTON_LOCATOR);
+        driver.findElement(ALERT_CONFIRM_BUTTON_LOCATOR).click();
+        waitForElementVisible(MailStatusPage.MAIL_ADDRESSEE_LOCATOR);
+        return new MailStatusPage(driver);
+    }
+
+    public String getInvalidAddresseeAlertMessage() {
+        waitForAlertDisplayed();
+        return driver.switchTo().alert().getText();
     }
 }

@@ -1,13 +1,14 @@
-package pageObject.tests;
+package pageFactory.tests;
+
 
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
-import pageObject.config.GlobalParameters;
-import pageObject.pages.HeaderMenuPage;
-import pageObject.pages.LoginPage;
+import pageFactory.config.GlobalParameters;
+import pageFactory.pages.*;
+
 
 public class LoginTest extends BaseTest {
 
@@ -45,7 +46,7 @@ public class LoginTest extends BaseTest {
     @AfterMethod
     public void logout() {
         HeaderMenuPage headerMenuPage = new HeaderMenuPage(driver);
-        if (driver.findElement(HeaderMenuPage.LOGOUT_LINK_LOCATOR).isDisplayed()) {
+        if (headerMenuPage.logOutButton.isDisplayed()) {
             headerMenuPage.logout();
         }
     }

@@ -1,4 +1,5 @@
-package pageObject.config;
+package pageFactory.config;
+
 
 import org.apache.commons.lang3.StringUtils;
 

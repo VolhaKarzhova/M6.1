@@ -5,16 +5,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import pageObject.config.GlobalParameters;
-import pageObject.objects.Letter;
-import pageObject.pages.HeaderMenuPage;
-import pageObject.pages.NewLetterPage;
 
 import java.util.concurrent.TimeUnit;
 
 public class BaseTest {
 
     protected WebDriver driver;
-    protected Letter letter;
 
     @BeforeClass
     public void setUp() {
@@ -25,7 +21,6 @@ public class BaseTest {
         driver.manage().timeouts().setScriptTimeout(15, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         driver.get(GlobalParameters.URL);
-        letter = new Letter();
     }
 
     @AfterClass
