@@ -4,10 +4,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import pageFactory.businessObjects.Letter;
 import pageFactory.config.GlobalParameters;
-import pageFactory.pages.HeaderMenuPage;
-import pageFactory.pages.LeftMenuPage;
-import pageFactory.pages.LoginPage;
-import pageFactory.pages.NewLetterPage;
+import pageFactory.pages.*;
 import pageFactory.utils.RandomUtils;
 
 
@@ -27,24 +24,22 @@ public class SendAlertMailTest extends BaseTest {
 
     @Test(description = "Check that sending mail with no subject and body was successful", dependsOnMethods = "checkAlertWhenSendingLetterWithOnlyAddresseeFilled")
     public void sendMailWithBlankSubjectAndBodyInputs() {
-        String addressee = new NewLetterPage(driver).clickConfirmButtonOnAlertMessageToSendLetter().getAddresseFromMessage();
+        String addressee = new NewLetterPage(driver).clickConfirmButtonOnAlertMessageToSendLetter().getAddresseeFromMessage();
         Assert.assertEquals(addressee, letter.getAddressee(), "Addressee of the sent letter doesn't match");
     }
 
     @Test(description = "Check that letter without Subject and Body presents in the Sent Folder", dependsOnMethods = "sendMailWithBlankSubjectAndBodyInputs")
     public void checkLetterWithOnlyAddresseeFilledInSentFolder() {
         LeftMenuPage leftMenuPage = new LeftMenuPage(driver);
-        Letter letter = leftMenuPage.openSentFolder()
-                .openLetterWithoutSubject().getLetterObject();
-        Assert.assertEquals(letter.toString(), letter.toString(), "Letter is not in the Sent Folder");
+        Letter letter1 = leftMenuPage.openSentFolder().openLetterWithoutSubject().getLetterObject();
+        Assert.assertEquals(letter1.toString(), letter.toString(), "Letter is not in the Sent Folder");
     }
 
     @Test(description = "Check that letter without Subject and Body presents in the Inbox Folder", dependsOnMethods = "checkLetterWithOnlyAddresseeFilledInSentFolder")
     public void checkLetterWithOnlyAddresseeFilledInInboxFolder() {
         LeftMenuPage leftMenuPage = new LeftMenuPage(driver);
-        Letter letter = leftMenuPage.openInboxFolder()
-                .openLetterWithoutSubject().getLetterObject();
-        Assert.assertEquals(letter.toString(), letter.toString(), "Letter is not in the Inbox Folder");
+        Letter letter1 = leftMenuPage.openInboxFolder().openLetterWithoutSubject().getLetterObject();
+        Assert.assertEquals(letter1.toString(), letter.toString(), "Letter is not in the Inbox Folder");
     }
 
     @Test(description = "Check invalid Addressee alert message", dependsOnMethods = "checkLetterWithOnlyAddresseeFilledInInboxFolder")
@@ -52,7 +47,6 @@ public class SendAlertMailTest extends BaseTest {
         NewLetterPage newLetterPage = new HeaderMenuPage(driver).clickNewLetterButton();
         String alert = newLetterPage.fillAllLetterInputs(randomUtils.setInvalidAddressee(), randomUtils.setLetterSubject(),
                 randomUtils.setLetterBody()).sendMail().newLetterPage.getInvalidAddresseeAlertMessage();
-        System.out.println(alert);
         Assert.assertEquals(alert, NewLetterPage.ALERT_INVALID_ADDRESSEE_MESSAGE, "Text of alert doesn't match");
     }
 }

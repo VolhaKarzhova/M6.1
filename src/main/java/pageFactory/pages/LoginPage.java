@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class LoginPage extends AbstactPage {
+public class LoginPage extends AbstractPage {
 
     public static final String BLANK_INPUTS_ERROR_MESSAGE = "Введите имя ящика";
     public static final String INVALID_CREDENTIALS_ERROR_MESSAGE = "Неверное имя или пароль";
@@ -12,7 +12,7 @@ public class LoginPage extends AbstactPage {
     public static final String BLANK_PASSWORD_ERROR_MESSAGE = "Введите пароль";
 
     @FindBy(id = "mailbox__login")
-    WebElement loginInput;
+    private WebElement loginInput;
 
     @FindBy(css = "#mailbox__password")
     private WebElement passwordInput;

@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class HeaderMenuPage extends AbstactPage {
+public class HeaderMenuPage extends AbstractPage {
 
     @FindBy(css = "#PH_user-email")
     private WebElement logedInUserMail;
@@ -26,7 +26,6 @@ public class HeaderMenuPage extends AbstactPage {
 
     public LoginPage logout() {
         logOutButton.click();
-        //waitForElementVisible(Loginpage.loginInput)
         return new LoginPage(driver);
     }
 

@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class NewLetterPage extends AbstactPage {
+public class NewLetterPage extends AbstractPage {
 
     public LeftMenuPage leftMenuPage = new LeftMenuPage(driver);
 

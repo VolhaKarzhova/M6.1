@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class MailStatusPage extends AbstactPage {
+public class MailStatusPage extends AbstractPage {
 
     public NewLetterPage newLetterPage = new NewLetterPage(driver);
 
@@ -16,7 +16,7 @@ public class MailStatusPage extends AbstactPage {
         super(driver);
     }
 
-    public String getAddresseFromMessage() {
+    public String getAddresseeFromMessage() {
         return mailAddresseeLocator.getText();
     }
 }

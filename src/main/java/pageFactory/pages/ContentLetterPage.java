@@ -5,12 +5,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import pageFactory.businessObjects.Letter;
 
-public class ContentLetterPage extends AbstactPage {
+public class ContentLetterPage extends AbstractPage {
 
     public LeftMenuPage leftMenuPage = new LeftMenuPage(driver);
 
     @FindBy(xpath = "//span[@class='b-letter__head__addrs__value']/span")
-    private WebElement mailAddressee;
+    public WebElement mailAddressee;
 
     @FindBy(xpath = "//div[@class='b-letter__head__subj__text']")
     private WebElement mailSubject;

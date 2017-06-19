@@ -5,9 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class LeftMenuPage extends AbstactPage {
-
-    private MailListPage mailListPage = new MailListPage(driver);
+public class LeftMenuPage extends AbstractPage {
 
     @FindBy(xpath = "//a[@href='/messages/sent/']")
     private WebElement sentFolder;
@@ -34,14 +32,13 @@ public class LeftMenuPage extends AbstactPage {
     public MailListPage openInboxFolder() {
         waitForElementEnabled(inboxFolder);
         inboxFolder.click();
-        //waitForElementVisible(mailListPage.letterBlock);
+        waitForElementVisible(MailListPage.letterBlock);
         return new MailListPage(driver);
     }
 
     public MailListPage openInboxFromSpamFolder() {
         waitForElementEnabled(mailsButton);
         mailsButton.click();
-        waitForElementVisible(mailListPage.letterBlock);
         return new MailListPage(driver);
     }
 
@@ -60,14 +57,12 @@ public class LeftMenuPage extends AbstactPage {
     public MailListPage openDeletedFolder() {
         waitForElementEnabled(trashFolder);
         trashFolder.click();
-        waitForElementVisible(mailListPage.letterBlock);
         return new MailListPage(driver);
     }
 
     public MailListPage openSpamFolder() {
         waitForElementEnabled(spamFolder);
         spamFolder.click();
-        waitForElementVisible(mailListPage.letterBlock);
         return new MailListPage(driver);
     }
 }
