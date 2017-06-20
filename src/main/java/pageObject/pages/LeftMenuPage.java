@@ -5,12 +5,12 @@ import org.openqa.selenium.WebDriver;
 
 public class LeftMenuPage extends AbstractPage {
 
-    private static final By SENT_MAIL_FOLDER_LOCATOR = By.xpath("//a[@href='/messages/sent/']");
-    private static final By DRAFT_MAIL_FOLDER_LOCATOR = By.cssSelector("a[href$='drafts/']>span");
-    private static final By INBOX_MAIL_FOLDER_LOCATOR = By.xpath("//a[@href='/messages/inbox/' and @class='b-nav__link']");
-    private static final By SPAM_MAIL_FOLDER_LOCATOR = By.xpath("//a[@href='/messages/spam/']/span[contains(@class,'text')]");
-    private static final By DELETED_MAIL_FOLDER_LOCATOR = By.xpath("//a[@href='/messages/trash/']/span[contains(@class,'text')]");
-    private static final By MAILS_BUTTON_LOCATOR = By.xpath("//*[@href='/messages/inbox/'][@role='button']");
+    private static final By SENT_MAIL_FOLDER_LOCATOR = By.xpath("//div[@data-id='500000']");
+    private static final By DRAFT_MAIL_FOLDER_LOCATOR = By.xpath("//div[@data-id='500001']");
+    private static final By INBOX_MAIL_FOLDER_LOCATOR = By.xpath("//div[@data-id='0']");
+    private static final By SPAM_MAIL_FOLDER_LOCATOR = By.xpath("//div[@data-id='950']");
+    private static final By DELETED_MAIL_FOLDER_LOCATOR = By.xpath("//div[@data-id='500002']");
+    private static final By CLEAR_FOLDER_LOCATOR = By.xpath("//button[@data-name='clearFolder']");
 
     public LeftMenuPage(WebDriver driver) {
         super(driver);
@@ -23,21 +23,17 @@ public class LeftMenuPage extends AbstractPage {
         return new MailListPage(driver);
     }
 
-    public MailListPage openInboxFromSpamFolder() {
-        driver.findElement(MAILS_BUTTON_LOCATOR).click();
-        waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
-        return new MailListPage(driver);
-    }
-
     public MailListPage openSentFolder() {
         waitForElementEnabled(SENT_MAIL_FOLDER_LOCATOR);
         driver.findElement(SENT_MAIL_FOLDER_LOCATOR).click();
+        waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
         return new MailListPage(driver);
     }
 
     public MailListPage openDraftFolder() {
         waitForElementEnabled(DRAFT_MAIL_FOLDER_LOCATOR);
         driver.findElement(DRAFT_MAIL_FOLDER_LOCATOR).click();
+        waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
         return new MailListPage(driver);
     }
 
@@ -49,9 +45,10 @@ public class LeftMenuPage extends AbstractPage {
     }
 
     public MailListPage openSpamFolder() {
+        refreshPage();
         waitForElementEnabled(SPAM_MAIL_FOLDER_LOCATOR);
         driver.findElement(SPAM_MAIL_FOLDER_LOCATOR).click();
-        waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
+        waitForElementVisible(CLEAR_FOLDER_LOCATOR);
         return new MailListPage(driver);
     }
 }

@@ -2,19 +2,21 @@ package pageObject.pages;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 
 public class MailListPage extends AbstractPage {
 
     public static final By LETTER_BLOCK_LOCATOR = By.xpath("//div[@data-mnemo='letters']");
-    private static final By DELETE_DRAFT_LETTER_BUTTON_LOCATOR = By.xpath("//div[@data-cache-key='500001_undefined_false']//div[@data-name='remove']/span");
-    private static final By DELETE_LETTER_FROM_TRASH_BUTTON_LOCATOR = By.xpath("//div[@data-cache-key='500002_undefined_false']//div[@data-name='remove']/span");
+    private static final String DELETE_BUTTON_LOCATOR = "(//div[@data-name='remove'])[%d]/span";
+    private static final By SPAM_BUTTON_LOCATOR = By.xpath("//div[@data-name='spam']");
     private static final By NO_SPAM_BUTTON_LOCATOR = By.xpath("//div[@data-cache-key='950_undefined_false']//div[@data-name='noSpam']/span");
-    private static final By MAIL_BLANK_SUBJECT_LOCATOR = By.xpath("(//a[@class='js-href b-datalist__item__link'][not(@data-subject)])[1]");
-    private static final String MAIL_BY_SUBJECT_LOCATOR = "//*[@data-subject='%s']";
-    private static final String LETTER_CHECKBOX_LOCATOR = "//*[@data-subject='%s']//div[@class='b-checkbox__box']";
-    private static final String SPAM_LETTER_BY_SUBJECT_LOCATOR = "//div[@data-cache-key='950_undefined_false']//a[@data-subject='%s']";
-    private static final String CHECKBOX_NOSPAM_LOCATOR = "//div[@data-cache-key='950_undefined_false']//a[@data-subject='%s']//div[@class='b-checkbox__box']";
+    private static final By MAIL_WITH_BLANK_SUBJECT_LOCATOR = By.xpath("(//a[@class='js-href b-datalist__item__link'][not(@data-subject)])[1]");
+    private static final String MAIL_BY_SUBJECT_LOCATOR = "//a[@data-subject='%s']";
+    private static final String LETTER_CHECKBOX_LOCATOR = "(//*[@data-subject='%s']//div[@class='b-checkbox__box'])[%d]";
+    private static final By CONFIRM_SPAM_BUTTON_LOCATOR = By.xpath("//div[@class='is-confirmSpam_in']//button[contains(@class,'confirm-cancel')]");
+
 
     public MailListPage(WebDriver driver) {
         super(driver);
@@ -28,51 +30,47 @@ public class MailListPage extends AbstractPage {
     }
 
     public ContentLetterPage openLetterWithoutSubject() {
-        waitForElementEnabled(MAIL_BLANK_SUBJECT_LOCATOR);
-        driver.findElement(MAIL_BLANK_SUBJECT_LOCATOR).click();
+        waitForElementEnabled(MAIL_WITH_BLANK_SUBJECT_LOCATOR);
+        driver.findElement(MAIL_WITH_BLANK_SUBJECT_LOCATOR).click();
         waitForElementVisible(ContentLetterPage.ADDRESSEE_MAIL_LOCATOR);
         return new ContentLetterPage(driver);
     }
 
-    public boolean checkLetterBySubjectIsDisplayed(String subject) {
-        if (driver.findElement(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject))).isDisplayed()) {
-            return true;
-        } else return false;
+    public boolean isLetterVisible(String subject) {
+        boolean i = false;
+        try {
+            waitForElementVisible(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
+            driver.findElement(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject))).isDisplayed();
+            i = true;
+        } catch (TimeoutException exception) {
+            return i;
+        } catch (NoSuchElementException exception) {
+        }  return i;
     }
 
-    public boolean checkLetterPresentInSpamFolder(String subject) {
-        if (driver.findElement(By.xpath(String.format(SPAM_LETTER_BY_SUBJECT_LOCATOR, subject))).isDisplayed()) {
-            return true;
-        } else return false;
-    }
-
-    public MailListPage clickLetterCheckbox(String subject) {
-        waitForElementVisible(By.xpath(String.format(LETTER_CHECKBOX_LOCATOR, subject)));
-        driver.findElement(By.xpath(String.format(LETTER_CHECKBOX_LOCATOR, subject))).click();
+    public MailListPage clickLetterCheckbox(String subject, int position) {
+        waitForElementVisible(By.xpath(String.format(LETTER_CHECKBOX_LOCATOR, subject, position)));
+        driver.findElement(By.xpath(String.format(LETTER_CHECKBOX_LOCATOR, subject, position))).click();
         return new MailListPage(driver);
     }
 
-    public MailListPage clickLetterCheckboxInSpamFolder(String subject) {
-        waitForElementVisible(By.xpath(String.format(CHECKBOX_NOSPAM_LOCATOR, subject)));
-        driver.findElement(By.xpath(String.format(CHECKBOX_NOSPAM_LOCATOR, subject))).click();
-        return new MailListPage(driver);
-    }
-
-    public MailListPage deleteDraftLetter(String subject) {
-        driver.findElement(DELETE_DRAFT_LETTER_BUTTON_LOCATOR).click();
-        waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
-        return new MailListPage(driver);
-    }
-
-    public MailListPage deleteLetterFromTrash(String subject) {
-        driver.findElement(DELETE_LETTER_FROM_TRASH_BUTTON_LOCATOR).click();
+    public MailListPage deleteLetter(String subject, int position) {
+        driver.findElement(By.xpath(String.format(DELETE_BUTTON_LOCATOR, position))).click();
         waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         return new MailListPage(driver);
     }
 
     public MailListPage markLetterAsNoSpam(String subject) {
         driver.findElement(NO_SPAM_BUTTON_LOCATOR).click();
-        waitForElementDisappear(By.xpath(String.format(SPAM_LETTER_BY_SUBJECT_LOCATOR, subject)));
+        waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
+        return new MailListPage(driver);
+    }
+
+    public MailListPage markLetterAsSpam(String subject) {
+        driver.findElement(SPAM_BUTTON_LOCATOR).click();
+        waitForElementEnabled(CONFIRM_SPAM_BUTTON_LOCATOR);
+        driver.findElement(CONFIRM_SPAM_BUTTON_LOCATOR).click();
+        waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         return new MailListPage(driver);
     }
 }

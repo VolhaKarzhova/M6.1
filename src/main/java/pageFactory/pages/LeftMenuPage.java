@@ -7,23 +7,20 @@ import org.openqa.selenium.support.FindBy;
 
 public class LeftMenuPage extends AbstractPage {
 
-    @FindBy(xpath = "//a[@href='/messages/sent/']")
+    @FindBy(xpath = "//div[@data-id='500000']")
     private WebElement sentFolder;
 
-    @FindBy(css = "a[href$='drafts/']>span")
+    @FindBy(xpath = "//div[@data-id='500001']")
     private WebElement draftFolder;
 
-    @FindBy(xpath = "//a[@href='/messages/inbox/' and @class='b-nav__link']")
+    @FindBy(xpath = "//div[@data-id='0']")
     private WebElement inboxFolder;
 
-    @FindBy(xpath = "//a[@href='/messages/spam/']/span[contains(@class,'text')]")
+    @FindBy(xpath = "//div[@data-id='950']")
     private WebElement spamFolder;
 
-    @FindBy(xpath = "//a[@href='/messages/trash/']/span[contains(@class,'text')]")
+    @FindBy(xpath = "//div[@data-id='500002']")
     private WebElement trashFolder;
-
-    @FindBy(xpath = "//*[@href='/messages/inbox/'][@role='button']")
-    private WebElement mailsButton;
 
     public LeftMenuPage(WebDriver driver) {
         super(driver);
@@ -32,13 +29,6 @@ public class LeftMenuPage extends AbstractPage {
     public MailListPage openInboxFolder() {
         waitForElementEnabled(inboxFolder);
         inboxFolder.click();
-        waitForElementVisible(MailListPage.letterBlock);
-        return new MailListPage(driver);
-    }
-
-    public MailListPage openInboxFromSpamFolder() {
-        waitForElementEnabled(mailsButton);
-        mailsButton.click();
         return new MailListPage(driver);
     }
 
@@ -61,6 +51,7 @@ public class LeftMenuPage extends AbstractPage {
     }
 
     public MailListPage openSpamFolder() {
+        refreshPage();
         waitForElementEnabled(spamFolder);
         spamFolder.click();
         return new MailListPage(driver);

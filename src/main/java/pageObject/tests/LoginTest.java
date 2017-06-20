@@ -9,17 +9,21 @@ import pageObject.config.GlobalParameters;
 import pageObject.pages.HeaderMenuPage;
 import pageObject.pages.LoginPage;
 
+
 public class LoginTest extends BaseTest {
 
-    private GlobalParameters globalParameters = new GlobalParameters();
+    private static final String BLANK_INPUTS_ERROR_MESSAGE = "Введите имя ящика";
+    private static final String INVALID_CREDENTIALS_ERROR_MESSAGE = "Неверное имя или пароль";
+    private static final String BLANK_LOGIN_ERROR_MESSAGE = "Введите имя ящика";
+    private static final String BLANK_PASSWORD_ERROR_MESSAGE = "Введите пароль";
 
     @Test(description = "Check displayed username for logged user account")
     public void loginWithValidCredentials() {
         HeaderMenuPage headerMenuPage = new LoginPage(driver)
-                .login(globalParameters.getUserLogin(), globalParameters.getUserPassword());
+                .login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD);
         String userLogin = headerMenuPage.getUserLogin();
         Assert.assertTrue(userLogin
-                        .equalsIgnoreCase(globalParameters.getUserLogin() + globalParameters.getUserDomain()),
+                        .equalsIgnoreCase(GlobalParameters.USER_LOGIN + GlobalParameters.USER_DOMAIN),
                 "Login wasn't successful");
     }
 
@@ -34,18 +38,18 @@ public class LoginTest extends BaseTest {
     @DataProvider(name = "credentialsDataProvider")
     public Object[][] credentialsDataProvider() {
         return new Object[][]{
-                {GlobalParameters.EMPTY_STRING, globalParameters.getUserPassword(), LoginPage.BLANK_LOGIN_ERROR_MESSAGE},
-                {GlobalParameters.EMPTY_STRING, GlobalParameters.EMPTY_STRING, LoginPage.BLANK_INPUTS_ERROR_MESSAGE},
-                {globalParameters.getUserLogin(), GlobalParameters.EMPTY_STRING, LoginPage.BLANK_PASSWORD_ERROR_MESSAGE},
-                {globalParameters.getUserLogin(), GlobalParameters.INVALID_USER_PASSWORD, LoginPage.INVALID_CREDENTIALS_ERROR_MESSAGE},
-                {GlobalParameters.INVALID_USER_LOGIN, globalParameters.getUserPassword(), LoginPage.INVALID_CREDENTIALS_ERROR_MESSAGE}
+                {GlobalParameters.EMPTY_STRING, GlobalParameters.EMPTY_STRING, BLANK_INPUTS_ERROR_MESSAGE},
+                {GlobalParameters.USER_LOGIN, GlobalParameters.EMPTY_STRING, BLANK_PASSWORD_ERROR_MESSAGE},
+                {GlobalParameters.USER_LOGIN, GlobalParameters.INVALID_USER_PASSWORD, INVALID_CREDENTIALS_ERROR_MESSAGE},
+                {GlobalParameters.INVALID_USER_LOGIN, GlobalParameters.USER_PASSWORD, INVALID_CREDENTIALS_ERROR_MESSAGE},
+                {GlobalParameters.EMPTY_STRING, GlobalParameters.USER_PASSWORD, BLANK_LOGIN_ERROR_MESSAGE}
         };
     }
 
     @AfterMethod
     public void logout() {
         HeaderMenuPage headerMenuPage = new HeaderMenuPage(driver);
-        if (driver.findElement(HeaderMenuPage.LOGOUT_LINK_LOCATOR).isDisplayed()) {
+        if (headerMenuPage.isLogOutButtonVisible()) {
             headerMenuPage.logout();
         }
     }

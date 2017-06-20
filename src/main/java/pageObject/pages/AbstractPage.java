@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class AbstractPage {
 
-    private static final int WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 10;
+    private static final int WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 30;
 
     protected WebDriver driver;
 
@@ -33,5 +33,8 @@ public class AbstractPage {
 
     protected void waitForAlertDisplayed() {
         new WebDriverWait(driver, WAIT_FOR_ELEMENT_TIMEOUT_SECONDS).until(ExpectedConditions.alertIsPresent());
+    }
+    protected void refreshPage () {
+        driver.navigate().refresh();
     }
 }

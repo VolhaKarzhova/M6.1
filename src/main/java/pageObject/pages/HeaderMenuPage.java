@@ -29,4 +29,8 @@ public class HeaderMenuPage extends AbstractPage {
         driver.findElement(NEW_LETTER_BUTTON_LOCATOR).click();
         return new NewLetterPage(driver);
     }
+
+    public boolean isLogOutButtonVisible() {
+        return driver.findElement(LOGOUT_LINK_LOCATOR).isDisplayed();
+    }
 }

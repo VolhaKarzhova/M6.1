@@ -13,10 +13,7 @@ public class NewLetterPage extends AbstractPage {
     private static final By FRAME_NAME = By.xpath("//iframe[contains(@id, 'composeEditor')]");
     private static final By SEND_BUTTON_LOCATOR = By.xpath("//div[@data-name='send']");
     private static final By SAVE_DRAFT_BUTTON_LOCATOR = By.xpath("//div[contains(@data-name, 'saveDraft')]");
-    public static final String ALERT_EMPTY_BODY_MESSAGE = "Вы уверены, что хотите отправить пустое письмо?";
-    public static final String ALERT_INVALID_ADDRESSEE_MESSAGE = "В поле «Кому» указан некорректный адрес получателя.\n" +
-            "Исправьте ошибку и отправьте письмо ещё раз.";
-    private static final By ALERT_EMPTY_BODY_LOCATOR = By.xpath("//div[@class='is-compose-empty_in']//div[@class='popup__desc']");
+    private static final By ALERT_EMPTY_BODY_LOCATOR = By.xpath("//div[contains(@class,'empty')]//div[@class='popup__desc']");
     private static final By ALERT_CONFIRM_BUTTON_LOCATOR = By.xpath("//div[@class='is-compose-empty_in']//button[contains(@class, 'confirm-ok')]");
     private static final By SAVED_AS_DRAFT_MESSAGE_LOCATOR = By.xpath("//div[@class='b-toolbar__message']/a");
 
@@ -48,7 +45,7 @@ public class NewLetterPage extends AbstractPage {
         return driver.findElement(ALERT_EMPTY_BODY_LOCATOR).getText();
     }
 
-    public MailStatusPage clickConfirmButtonOnAlertMessageToSendLetter() {
+    public MailStatusPage confirmSendingLetterOnAlert() {
         waitForElementEnabled(ALERT_CONFIRM_BUTTON_LOCATOR);
         driver.findElement(ALERT_CONFIRM_BUTTON_LOCATOR).click();
         waitForElementVisible(MailStatusPage.MAIL_ADDRESSEE_LOCATOR);

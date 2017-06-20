@@ -9,10 +9,6 @@ public class NewLetterPage extends AbstractPage {
 
     public LeftMenuPage leftMenuPage = new LeftMenuPage(driver);
 
-    public static final String ALERT_EMPTY_BODY_MESSAGE = "Вы уверены, что хотите отправить пустое письмо?";
-    public static final String ALERT_INVALID_ADDRESSEE_MESSAGE = "В поле «Кому» указан некорректный адрес получателя.\n" +
-            "Исправьте ошибку и отправьте письмо ещё раз.";
-
     @FindBy(xpath = "//*[@data-original-name='To']")
     private WebElement addresseeInput;
 
@@ -68,7 +64,7 @@ public class NewLetterPage extends AbstractPage {
         return emptyMailBodyAlert.getText();
     }
 
-    public MailStatusPage clickConfirmButtonOnAlertMessageToSendLetter() {
+    public MailStatusPage confirmSendingLetterOnAlert() {
         waitForElementEnabled(alertConfirmButton);
         alertConfirmButton.click();
         waitForElementVisible(addresseeInput);

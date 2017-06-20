@@ -24,6 +24,7 @@ public class Letter {
         return body;
     }
 
+    @Override
     public String toString() {
         return "Addressee: " + getAddressee() + ", Subject: " + getSubject() + ", Body: " + getBody();
     }

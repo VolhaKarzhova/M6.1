@@ -7,8 +7,6 @@ import org.openqa.selenium.support.FindBy;
 
 public class MailStatusPage extends AbstractPage {
 
-    public NewLetterPage newLetterPage = new NewLetterPage(driver);
-
     @FindBy(xpath = "//span[@class='message-sent__info']")
     public WebElement mailAddresseeLocator;
 
@@ -16,7 +14,8 @@ public class MailStatusPage extends AbstractPage {
         super(driver);
     }
 
-    public String getAddresseeFromMessage() {
+    public String getAddresseeFromSuccessfulSendLetterMessage() {
+        waitForElementVisible(mailAddresseeLocator);
         return mailAddresseeLocator.getText();
     }
 }
