@@ -26,8 +26,8 @@ public class DraftMailTest extends BaseTest {
 
     @Test(description = "Check that deleted letter is not in the Draft Folder", dependsOnMethods = "saveDraftLetter")
     public void deleteDraftLetter() {
-        boolean isLetterVisible = new MailListPage(driver).clickLetterCheckbox(expectedLetter.getSubject(), 1)
-                .deleteLetter(expectedLetter.getSubject(), 2).isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterVisible = new MailListPage(driver)
+                .deleteLetter(expectedLetter.getSubject()).isLetterVisible(expectedLetter.getSubject());
         Assert.assertFalse(isLetterVisible, "Deleted letter is still in the Draft Folder");
     }
 
@@ -40,8 +40,8 @@ public class DraftMailTest extends BaseTest {
 
     @Test(description = "Delete letter permanently", dependsOnMethods = "isLetterInDeletedFolder")
     public void deleteLetterFromDeletedFolder() {
-        boolean isLetterVisible = new MailListPage(driver).clickLetterCheckbox(expectedLetter.getSubject(), 1)
-                .deleteLetter(expectedLetter.getSubject(), 3).isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterVisible = new MailListPage(driver)
+                .deleteLetter(expectedLetter.getSubject()).isLetterVisible(expectedLetter.getSubject());
         Assert.assertFalse(isLetterVisible, "Deleted letter is still i the Trash Folder");
     }
 }

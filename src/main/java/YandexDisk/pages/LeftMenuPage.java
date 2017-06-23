@@ -7,9 +7,9 @@ public class LeftMenuPage extends AbstractPage {
 
     private static final By TRASH_FOLDER_LOCATOR = By.xpath("//a[@ href='/client/trash']");
 
-    public TrashFolderPage openTrashFolder() {
+    public FileListPage openTrashFolder() {
         waitForElementVisible(TRASH_FOLDER_LOCATOR);
         driver.findElement(TRASH_FOLDER_LOCATOR).click();
-        return new TrashFolderPage();
+        return new FileListPage();
     }
 }

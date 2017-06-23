@@ -41,7 +41,7 @@ public class SendMailWithSpamTest extends BaseTest {
 
     @Test(description = "Check spam letter is removed from Inbox folder", dependsOnMethods = "isLetterInInboxFolder")
     public void markLetterAsSpam() {
-        MailListPage mailListPage = new LeftMenuPage(driver).openInboxFolder().clickLetterCheckbox(expectedLetter.getSubject(), 1)
+        MailListPage mailListPage = new LeftMenuPage(driver).openInboxFolder().clickLetterCheckbox(expectedLetter.getSubject())
                 .markLetterAsSpam(expectedLetter.getSubject());
         boolean isLetterPresent = mailListPage.isLetterVisible(expectedLetter.getSubject());
         Assert.assertFalse(isLetterPresent, "Letter is still in the Inbox Folder");
@@ -56,7 +56,7 @@ public class SendMailWithSpamTest extends BaseTest {
 
     @Test(description = "Check letter disappeared from Spam Folder", dependsOnMethods = "isLetterInSpamFolder")
     public void markLetterAsNoSpam() {
-        boolean isLetterPresent = new MailListPage(driver).clickLetterCheckbox(expectedLetter.getSubject(), 1)
+        boolean isLetterPresent = new MailListPage(driver).clickLetterCheckbox(expectedLetter.getSubject())
                 .markLetterAsNoSpam(expectedLetter.getSubject()).isLetterVisible(expectedLetter.getSubject());
         Assert.assertFalse(isLetterPresent, "Letter is still in the Spam Folder");
     }

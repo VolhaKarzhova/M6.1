@@ -15,10 +15,10 @@ public class LoginPage extends AbstractPage {
         return this;
     }
 
-    public MainPage login(String login, String password) {
+    public FileListPage login(String login, String password) {
         driver.findElement(LOGIN_INPUT_LOCATOR).sendKeys(login);
         driver.findElement(PASSWORD_INPUT_LOCATOR).sendKeys(password);
         driver.findElement(LOGIN_BUTTON_LOCATOR).click();
-        return new MainPage();
+        return new FileListPage();
     }
 }
