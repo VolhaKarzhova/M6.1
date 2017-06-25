@@ -1,9 +1,11 @@
 package YandexDisk.pages;
 
 import YandexDisk.config.GlobalParameters;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +15,13 @@ public class FileListPage extends AbstractPage {
     private static final By UPLOAD_POPUP_CLOSE_BUTTON_LOCATOR = By.xpath("//a[@data-click-action='dialog.close']");
     private static final By UPLOAD_INPUT_LOCATOR = By.xpath("//input[@type='file']");
     private static final By UPLOAD_DONE_ICON_LOCATOR = By.xpath("//div[contains(@class,'upload__icon_done')]");
-    private static final By TRASH_ICON_LOCATOR = By.xpath("//div[contains(@class,'trash')]");
+    public static final By TRASH_ICON_LOCATOR = By.xpath("//div[contains(@class,'trash')]");
     private static final By CRUMBS_CURRENT_LOCATOR = By.xpath("//span[@class='crumbs__current']");
     private static final By POPUP_CLOSE_BUTTON_LOCATOR = By.xpath("//a[contains(@class,'popup-close')]");
-    private static final By CRUMBS_MAIN_DISK_LOCATOR = By.xpath("(//a[@id='/disk'])[2]");
-    private static final By CLEAR_TRASH_BUTTON_LOCATOR = By.xpath("//div[@class='toolset__buttons']//button");
     private static final By HIDE_RECENT_FILES_BUTTON_LOCATOR = By.xpath("//div[contains(@class,'recent-files__hide')]");
-    private static final By ACCEPT_BUTTON_LOCATOR = By.xpath("//button[contains(@class,'confirmation-accept')]");
     private static final String FILE_LOCATOR = "//div[@title='%s']";
+    private static final String UPLOAD_DONE_LOCATOR = "//div[contains(@data-key, '%s')]//div[contains(@class,'done')]";
+    public static final By NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR = By.xpath("//div[contains(@class,'notifications__text')]");
 
     public List<By> setFileList() {
         List<By> locators = new ArrayList<By>();
@@ -29,11 +30,11 @@ public class FileListPage extends AbstractPage {
         return locators;
     }
 
+    //использование только блока if не позволяет отлавливать постоянный exception, пришлось вернуться к блоку try/catch
     public FileListPage closePopUpWindow() {
         try {
             driver.findElement(POPUP_CLOSE_BUTTON_LOCATOR).click();
         } catch (Exception e) {
-            System.out.println("There was no pop-up window after login");
         }
         return this;
     }
@@ -43,10 +44,14 @@ public class FileListPage extends AbstractPage {
         return driver.findElement(HEADER_USERNAME_LOCATOR).getText();
     }
 
-    public FileListPage uploadFile(String filePath) {
+    public FileListPage uploadFile(List<File> fileList) {
         WebElement fileInput = driver.findElement(UPLOAD_INPUT_LOCATOR);
-        fileInput.sendKeys(filePath);
-        waitForElementVisible(UPLOAD_DONE_ICON_LOCATOR);
+        for (File filePath : fileList) {
+            fileInput.sendKeys(filePath.getAbsolutePath());
+            //waitForElementVisible(UPLOAD_DONE_ICON_LOCATOR);
+            String fileName = filePath.getName();
+            waitForElementVisible(By.xpath(String.format(UPLOAD_DONE_LOCATOR, fileName)));
+        }
         driver.findElement(UPLOAD_POPUP_CLOSE_BUTTON_LOCATOR).click();
         return this;
     }
@@ -54,28 +59,19 @@ public class FileListPage extends AbstractPage {
     public FileListPage closeRecentFilesPanel() {
         try {
             driver.findElement(HIDE_RECENT_FILES_BUTTON_LOCATOR).click();
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
         }
         return this;
     }
 
-    public boolean isFileVisible(String fileName) {
-        try {
-            driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName)));
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public FooterNotificationsPage moveToTrash(String fileName) {
+    public FileListPage moveToTrash(String fileName) {
         waitForElementVisible(TRASH_ICON_LOCATOR);
         waitForElementVisible(By.xpath(String.format(FILE_LOCATOR, fileName)));
         WebElement file = driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName)));
         WebElement trash = driver.findElement(TRASH_ICON_LOCATOR);
         new Actions(driver).dragAndDrop(file, trash).build().perform();
-        waitForElementVisible(FooterNotificationsPage.NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR);
-        return new FooterNotificationsPage();
+        waitForElementVisible(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR);
+        return this;
     }
 
     public FileListPage openTrashPage() {
@@ -88,13 +84,6 @@ public class FileListPage extends AbstractPage {
     public RightFilePanelPage clickFileToSelect(String fileName) {
         driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName))).click();
         return new RightFilePanelPage();
-    }
-
-    public FileListPage goToMainPage() {
-        JavascriptExecutor script = (JavascriptExecutor) driver;
-        script.executeScript("document.getElementById('/disk').click()");
-        waitForElementVisible(FileListPage.TRASH_ICON_LOCATOR);
-        return this;
     }
 
     public FileListPage selectSeveralFiles(List<By> locators) {
@@ -112,12 +101,33 @@ public class FileListPage extends AbstractPage {
         return this;
     }
 
-    public void clearTrashFolder() {
-        try {
-            driver.findElement(CLEAR_TRASH_BUTTON_LOCATOR).click();
-            driver.findElement(ACCEPT_BUTTON_LOCATOR).click();
-        } catch (NoSuchElementException e) {
-            System.out.println("Trash is already clear");
+    /* public List<File> areUploadedFilesVisible(List<File> fileList) {
+         List<File> uploadedListFile = new ArrayList<File>();
+         System.out.println("list"+uploadedListFile);
+         for (int i = 0; i < fileList.size(); i++) {
+             File file = fileList.get(i);
+                if (driver.findElement(By.xpath(String.format(FILE_LOCATOR, file.getName()))).isDisplayed()) {
+                 uploadedListFile.add(file);
+             }
+         }
+         return uploadedListFile;
+     }*/
+    public List<Boolean> areUploadedFilesVisible(List<File> fileList) {
+        List<Boolean> uploadedListFile = new ArrayList<Boolean>();
+        for (int i = 0; i < fileList.size(); i++) {
+            File file = fileList.get(i);
+            if (driver.findElement(By.xpath(String.format(FILE_LOCATOR, file.getName()))).isDisplayed()) {
+                uploadedListFile.add(true);
+            } else uploadedListFile.add(false);
         }
+        return uploadedListFile;
+    }
+
+    public String getNotificationMessageAboutMovedFile(String fileName) {
+        return driver.findElement(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR).getText();
+    }
+
+    public boolean isNotificationVisible() {
+        return driver.findElement(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR).isDisplayed();
     }
 }

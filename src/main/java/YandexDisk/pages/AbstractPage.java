@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.NoSuchElementException;
+
 public class AbstractPage {
 
     private static final int DEFAULT_TIMEOUT = 15;
@@ -17,8 +19,8 @@ public class AbstractPage {
         this.driver = WebDriverSingleton.getWebDriverInstance();
     }
 
-    protected boolean isElementPresent(By locator) {
-        return !driver.findElements(locator).isEmpty();
+    protected boolean isElementVisible(By locator){
+        return !driver.findElement(locator).isDisplayed();
     }
 
     protected void waitForElementPresent(By locator) {
@@ -35,6 +37,10 @@ public class AbstractPage {
 
     protected void highlightElement(By locator) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].style.border='3px solid green'", driver.findElement(locator));
+    }
+
+    protected void clickDiscCrumbs() {
+        ((JavascriptExecutor) driver).executeScript("document.getElementById('/disk').click()");
     }
 
     protected void unHighlightElement(By locator) {

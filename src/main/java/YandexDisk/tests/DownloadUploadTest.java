@@ -1,14 +1,21 @@
 package YandexDisk.tests;
 
 import YandexDisk.config.GlobalParameters;
+import YandexDisk.config.WorkWithFile;
 import YandexDisk.pages.FileListPage;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 
 public class DownloadUploadTest extends BaseTest {
+
+    private static List<File> expectedFileList;
+    private static List<Boolean> actualFileList;
 
     @Test(description = "Check successful login")
     public void login() {
@@ -17,24 +24,19 @@ public class DownloadUploadTest extends BaseTest {
         Assert.assertEquals(actualUserLogin, GlobalParameters.USER_LOGIN, "UserLogin doesn't match");
     }
 
-    @Test(dataProvider = "filesDataProvider", description = "Check if file upload was successful", dependsOnMethods = "login")
-    @Parameters({"filePath", "fileName"})
-    public void uploadFiles(String filePath, String fileName) {
-        FileListPage fileListPage = new FileListPage().closeRecentFilesPanel().uploadFile(filePath);
-        boolean isFileUploaded = fileListPage.isFileVisible(fileName);
-        Assert.assertTrue(isFileUploaded, "File doesn't present in the main folder");
+    @Test(description = "Check if file upload was successful", dependsOnMethods = "login")
+    public void uploadFiles() {
+        FileListPage fileListPage = new FileListPage().closeRecentFilesPanel().uploadFile(expectedFileList);
+        actualFileList = fileListPage.areUploadedFilesVisible(expectedFileList);
+        Assert.assertFalse(actualFileList.contains(false), "Not every file was uploaded");
     }
 
     @Test(description = "Check that uploaded files are in the main Folder", dependsOnMethods = "uploadFiles")
     public void downloadFile() {
-
     }
 
-    @DataProvider(name = "filesDataProvider")
-    public Object[][] filesDataProvider() {
-        return new Object[][]{
-                {GlobalParameters.FILE_PATH_TO_UPLOAD, GlobalParameters.FILE_NAME},
-                {GlobalParameters.ADDITIONAL_FILE_PATH_TO_UPLOAD, GlobalParameters.ADDITIONAL_FILE_NAME}
-        };
+    @BeforeClass
+    public void filesCreation() throws IOException {
+        expectedFileList = new WorkWithFile().createFiles(3);
     }
 }
