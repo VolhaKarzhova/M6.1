@@ -1,21 +1,17 @@
 package YandexDisk.tests;
 
 import YandexDisk.config.GlobalParameters;
-import YandexDisk.config.WorkWithFile;
 import YandexDisk.pages.FileListPage;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 
 public class DownloadUploadTest extends BaseTest {
 
-    private static List<File> expectedFileList;
-    private static List<Boolean> actualFileList;
+    private static List<File> actualFileList;
 
     @Test(description = "Check successful login")
     public void login() {
@@ -27,16 +23,11 @@ public class DownloadUploadTest extends BaseTest {
     @Test(description = "Check if file upload was successful", dependsOnMethods = "login")
     public void uploadFiles() {
         FileListPage fileListPage = new FileListPage().closeRecentFilesPanel().uploadFile(expectedFileList);
-        actualFileList = fileListPage.areUploadedFilesVisible(expectedFileList);
-        Assert.assertFalse(actualFileList.contains(false), "Not every file was uploaded");
+        actualFileList = fileListPage.getUploadedFilesList(expectedFileList);
+        Assert.assertEquals(actualFileList, expectedFileList, "Not all the files were uploaded");
     }
 
     @Test(description = "Check that uploaded files are in the main Folder", dependsOnMethods = "uploadFiles")
     public void downloadFile() {
-    }
-
-    @BeforeClass
-    public void filesCreation() throws IOException {
-        expectedFileList = new WorkWithFile().createFiles(3);
     }
 }

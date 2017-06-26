@@ -10,6 +10,7 @@ import java.util.List;
 
 public class WorkWithFile {
 
+
     public List<File> createFiles(int fileQuantity) throws IOException {
         List<File> fileList = new ArrayList<File>();
         File dir = new File("/" + RandomUtils.getFileDirectory());
@@ -20,5 +21,9 @@ public class WorkWithFile {
             fileList.add(file);
         }
         return fileList;
+    }
+
+    public String getFileName (List<File> fileList, int fileNumber) {
+        return fileList.get(fileNumber).getName();
     }
 }

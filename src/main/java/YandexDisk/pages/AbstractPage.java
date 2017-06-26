@@ -20,7 +20,7 @@ public class AbstractPage {
     }
 
     protected boolean isElementVisible(By locator){
-        return !driver.findElement(locator).isDisplayed();
+        return !driver.findElements(locator).isEmpty();
     }
 
     protected void waitForElementPresent(By locator) {
@@ -45,6 +45,9 @@ public class AbstractPage {
 
     protected void unHighlightElement(By locator) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].style.border='0px'", driver.findElement(locator));
+    }
+    protected void pageReload() {
+        driver.navigate().refresh();
     }
 
 

@@ -1,10 +1,12 @@
 package YandexDisk.pages;
 
 import YandexDisk.config.GlobalParameters;
+import YandexDisk.config.WorkWithFile;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,18 @@ public class FileListPage extends AbstractPage {
     private static final String UPLOAD_DONE_LOCATOR = "//div[contains(@data-key, '%s')]//div[contains(@class,'done')]";
     public static final By NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR = By.xpath("//div[contains(@class,'notifications__text')]");
 
+    public String getUserLogin() {
+        waitForElementVisible(HEADER_USERNAME_LOCATOR);
+        return driver.findElement(HEADER_USERNAME_LOCATOR).getText();
+    }
+
+    public FileListPage closePopUpWindow() {
+        if (isElementVisible(POPUP_CLOSE_BUTTON_LOCATOR)) {
+            driver.findElement(POPUP_CLOSE_BUTTON_LOCATOR).click();
+        }
+        return this;
+    }
+
     public List<By> setFileList() {
         List<By> locators = new ArrayList<By>();
         locators.add(By.xpath(String.format(FILE_LOCATOR, GlobalParameters.FILE_NAME)));
@@ -30,25 +44,11 @@ public class FileListPage extends AbstractPage {
         return locators;
     }
 
-    //использование только блока if не позволяет отлавливать постоянный exception, пришлось вернуться к блоку try/catch
-    public FileListPage closePopUpWindow() {
-        try {
-            driver.findElement(POPUP_CLOSE_BUTTON_LOCATOR).click();
-        } catch (Exception e) {
-        }
-        return this;
-    }
-
-    public String getUserLogin() {
-        waitForElementVisible(HEADER_USERNAME_LOCATOR);
-        return driver.findElement(HEADER_USERNAME_LOCATOR).getText();
-    }
-
     public FileListPage uploadFile(List<File> fileList) {
         WebElement fileInput = driver.findElement(UPLOAD_INPUT_LOCATOR);
         for (File filePath : fileList) {
             fileInput.sendKeys(filePath.getAbsolutePath());
-            //waitForElementVisible(UPLOAD_DONE_ICON_LOCATOR);
+            waitForElementVisible(UPLOAD_DONE_ICON_LOCATOR);
             String fileName = filePath.getName();
             waitForElementVisible(By.xpath(String.format(UPLOAD_DONE_LOCATOR, fileName)));
         }
@@ -57,9 +57,8 @@ public class FileListPage extends AbstractPage {
     }
 
     public FileListPage closeRecentFilesPanel() {
-        try {
+        if (isElementVisible(HIDE_RECENT_FILES_BUTTON_LOCATOR)) {
             driver.findElement(HIDE_RECENT_FILES_BUTTON_LOCATOR).click();
-        } catch (Exception e) {
         }
         return this;
     }
@@ -74,6 +73,10 @@ public class FileListPage extends AbstractPage {
         return this;
     }
 
+    public String setFileNameForFurtherActions(List<File> fileList, int fileNumber) {
+        return new WorkWithFile().getFileName(fileList,fileNumber);
+    }
+
     public FileListPage openTrashPage() {
         waitForElementVisible(TRASH_ICON_LOCATOR);
         new Actions(driver).doubleClick(driver.findElement(TRASH_ICON_LOCATOR)).build().perform();
@@ -86,41 +89,37 @@ public class FileListPage extends AbstractPage {
         return new RightFilePanelPage();
     }
 
-    public FileListPage selectSeveralFiles(List<By> locators) {
+    public FileListPage selectFiles (List<File> fileList) {
         Actions action = new Actions(driver);
         action.keyDown(Keys.CONTROL);
         WebElement element;
-        for (By locator : locators) {
-            waitForElementVisible(locator);
-            highlightElement(locator);
-            element = driver.findElement(locator);
+        for (File file : fileList) {
+            String fileName = file.getName();
+            waitForElementVisible(By.xpath(String.format(FILE_LOCATOR, fileName)));
+            highlightElement(By.xpath(String.format(FILE_LOCATOR, fileName)));
+            element = driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName)));
             action.click(element);
-            unHighlightElement(locator);
+            unHighlightElement(By.xpath(String.format(FILE_LOCATOR, fileName)));
         }
         action.keyUp(Keys.CONTROL).build().perform();
         return this;
     }
 
-    /* public List<File> areUploadedFilesVisible(List<File> fileList) {
-         List<File> uploadedListFile = new ArrayList<File>();
-         System.out.println("list"+uploadedListFile);
-         for (int i = 0; i < fileList.size(); i++) {
-             File file = fileList.get(i);
-                if (driver.findElement(By.xpath(String.format(FILE_LOCATOR, file.getName()))).isDisplayed()) {
-                 uploadedListFile.add(file);
-             }
-         }
-         return uploadedListFile;
-     }*/
-    public List<Boolean> areUploadedFilesVisible(List<File> fileList) {
-        List<Boolean> uploadedListFile = new ArrayList<Boolean>();
+    public List<File> getUploadedFilesList(List<File> fileList) {
+        pageReload();
+        List<File> uploadedListFile = new ArrayList<File>();
         for (int i = 0; i < fileList.size(); i++) {
-            File file = fileList.get(i);
-            if (driver.findElement(By.xpath(String.format(FILE_LOCATOR, file.getName()))).isDisplayed()) {
-                uploadedListFile.add(true);
-            } else uploadedListFile.add(false);
+            String fileName = new WorkWithFile().getFileName(fileList,i);
+            if (isElementVisible(By.xpath(String.format(FILE_LOCATOR, fileName)))) {
+                uploadedListFile.add(fileList.get(i));
+            }
         }
         return uploadedListFile;
+    }
+
+    public boolean isFileVisible(String fileName) {
+        return isElementVisible(By.xpath(String.format(FILE_LOCATOR, fileName)));
+
     }
 
     public String getNotificationMessageAboutMovedFile(String fileName) {

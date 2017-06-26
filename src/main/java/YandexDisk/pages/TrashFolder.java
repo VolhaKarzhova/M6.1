@@ -16,9 +16,8 @@ public class TrashFolder extends FileListPage {
     }
 
     public TrashFolder clearTrashFolder() {
-        WebElement clearButton = driver.findElement(CLEAR_TRASH_BUTTON_LOCATOR);
         if (isElementVisible(CLEAR_TRASH_BUTTON_LOCATOR)) {
-            clearButton.click();
+            driver.findElement(CLEAR_TRASH_BUTTON_LOCATOR).click();
             driver.findElement(ACCEPT_BUTTON_LOCATOR).click();
         }
         return this;
