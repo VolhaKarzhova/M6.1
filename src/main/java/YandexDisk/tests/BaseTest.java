@@ -1,7 +1,7 @@
 package YandexDisk.tests;
 
 
-import YandexDisk.config.WorkWithFile;
+import YandexDisk.utils.FilesUtils;
 import YandexDisk.pages.LoginPage;
 import YandexDisk.utils.WebDriverSingleton;
 import org.testng.annotations.AfterClass;
@@ -21,7 +21,7 @@ public class BaseTest {
         loginPage = new LoginPage().open();
     } @BeforeClass
     public void filesCreation() throws IOException {
-        expectedFileList = new WorkWithFile().createFiles(3);
+        expectedFileList = new FilesUtils().createFiles(3);
     }
 
     @AfterClass

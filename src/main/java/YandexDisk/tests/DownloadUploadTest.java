@@ -5,13 +5,8 @@ import YandexDisk.pages.FileListPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.util.List;
-
 
 public class DownloadUploadTest extends BaseTest {
-
-    private static List<File> actualFileList;
 
     @Test(description = "Check successful login")
     public void login() {
@@ -22,9 +17,9 @@ public class DownloadUploadTest extends BaseTest {
 
     @Test(description = "Check if file upload was successful", dependsOnMethods = "login")
     public void uploadFiles() {
-        FileListPage fileListPage = new FileListPage().closeRecentFilesPanel().uploadFile(expectedFileList);
-        actualFileList = fileListPage.getUploadedFilesList(expectedFileList);
-        Assert.assertEquals(actualFileList, expectedFileList, "Not all the files were uploaded");
+        FileListPage fileListPage = new FileListPage().closeRecentFilesPanel().uploadFiles(expectedFileList);
+        String checkFileUpload = fileListPage.checkFilesVisibility(expectedFileList);
+        Assert.assertEquals(checkFileUpload, GlobalParameters.EMPTY_STRING, "Not all the files were uploaded");
     }
 
     @Test(description = "Check that uploaded files are in the main Folder", dependsOnMethods = "uploadFiles")
