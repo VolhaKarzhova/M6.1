@@ -3,6 +3,7 @@ package YandexDisk.pages;
 import YandexDisk.utils.FilesUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
@@ -21,6 +22,7 @@ public class FileListPage extends AbstractPage {
     private static final By POPUP_CLOSE_BUTTON_LOCATOR = By.xpath("//a[contains(@class,'popup-close')]");
     private static final By HIDE_RECENT_FILES_BUTTON_LOCATOR = By.xpath("//div[contains(@class,'recent-files__hide')]");
     private static final String FILE_LOCATOR = "//div[@title='%s']";
+    private static final String CHECKED_CHECKBOX_LOCATOR = "//div[@title='%s'][contains(@class,'nb-resource_checked')]";
     private static final String UPLOAD_DONE_LOCATOR = "//div[contains(@data-key, '%s')]//div[contains(@class,'done')]";
     public static final By NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR = By.xpath("//div[contains(@class,'notifications__text')]");
 
@@ -68,13 +70,14 @@ public class FileListPage extends AbstractPage {
 
     public FileListPage moveFilesToTrash(List<File> fileList) {
         selectFiles(fileList);
-        waitForElementVisible(TRASH_ICON_LOCATOR);
         String fileName = new FilesUtils().getFileName(fileList, 0);
         WebElement file = driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName)));
         WebElement trash = driver.findElement(TRASH_ICON_LOCATOR);
-        waitForElementVisible(By.xpath(String.format(FILE_LOCATOR, fileName)));
-        waitForElementVisible(TRASH_ICON_LOCATOR);
-        new Actions(driver).dragAndDrop(file, trash).build().perform();
+        for (int i = 0; i < 3; i++)
+            try {
+                new Actions(driver).dragAndDrop(file, trash).build().perform();
+            } catch (StaleElementReferenceException e) {
+            }
         waitForElementVisible(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR);
         return this;
     }
@@ -87,6 +90,7 @@ public class FileListPage extends AbstractPage {
     }
 
     public FileListPage selectFiles(List<File> fileList) {
+        closeRecentFilesPanel();
         Actions action = new Actions(driver);
         action.keyDown(Keys.CONTROL);
         WebElement element;

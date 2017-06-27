@@ -7,9 +7,11 @@ import java.util.List;
 
 public class FilesUtils {
 
+    public File dir;
+
     public List<File> createFiles(int fileQuantity) throws IOException {
         List<File> fileList = new ArrayList<File>();
-        File dir = new File("/" + RandomUtils.getFileDirectory());
+        dir = new File("/" + RandomUtils.getFileDirectory());
         dir.mkdir();
         for (int x = 0; x < fileQuantity; x++) {
             File file = new File(dir, RandomUtils.getFileName() + ".txt");

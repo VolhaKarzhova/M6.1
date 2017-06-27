@@ -6,6 +6,7 @@ import YandexDisk.pages.LoginPage;
 import YandexDisk.pages.TrashFolder;
 import YandexDisk.utils.FilesUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -16,8 +17,7 @@ public class TrashRestoreTest extends BaseTest {
 
     private List<File> oneFileSelectedList;
     private static String fileName;
-
-    //private static final String FILE_WAS_PERMANENTLY_DELETED_NOTIFICATION_MESSAGE = "Файл «" + GlobalParameters.FILE_NAME + "» был удален";
+    private static final String FILE_WAS_PERMANENTLY_DELETED_NOTIFICATION_MESSAGE = "Файл «%s» был удален";
     private static final String FILE_WAS_DELETED_NOTIFICATION_MESSAGE = "Файл «%s» удален в Корзину";
     private static final String FILE_WAS_RESTORED_NOTIFICATION_MESSAGE = "Файл «%s» восстановлен";
     private static final String EXPECTED_MESSAGE = "File %s is not visible in Folder.";
@@ -68,50 +68,41 @@ public class TrashRestoreTest extends BaseTest {
 
     @Test(description = "Check several files are removed to Trash", dependsOnMethods = "checkRestoredFileInMainFolder")
     public void deleteSeveralFilesAtOnce() {
-        boolean isNotificationVisible = new FileListPage().selectFiles(expectedFileList)
+        boolean isNotificationVisible = new FileListPage()
                 .moveFilesToTrash(expectedFileList).isNotificationVisible();
         Assert.assertTrue(isNotificationVisible, "Notification about deleted files doesn't appear");
     }
 
-    /*@Test(dataProvider = "filesDataProvider", description = "Check that deleted file are in Trash", dependsOnMethods = "deleteSeveralFilesAtOnce")
-    @Parameters("fileName")
-    public void areDeletedFilesInMainFolder(String fileName) {
-        boolean checkFilesVisibility = new FileListPage().checkFilesVisibility(fileName);
-        Assert.assertFalse(checkFilesVisibility, "Deleted file " + fileName + " is still in the Main Folder");
+    @Test(description = "Check that deleted file are in Trash", dependsOnMethods = "deleteSeveralFilesAtOnce")
+    public void checkDeletedFilesInMainFolder() {
+        String filesVisibility = new FileListPage().checkFilesVisibility(expectedFileList);
+        Assert.assertTrue(filesVisibility.contains(String.format(EXPECTED_MESSAGE, fileName)), "Some deleted file are still in the Main Folder");
     }
 
-    @Test(dataProvider = "filesDataProvider", description = "Check that deleted file are in Trash", dependsOnMethods = "areDeletedFilesInMainFolder")
-    @Parameters("fileName")
-    public void areDeletedFilesInTrash(String fileName) {
-        boolean checkFilesVisibility = new FileListPage().openTrashPage().checkFilesVisibility(fileName);
-        Assert.assertTrue(checkFilesVisibility, "Deleted file " + fileName + " is not in the Trash");
+    @Test(description = "Check that deleted file are in Trash", dependsOnMethods = "checkDeletedFilesInMainFolder")
+    public void checkDeletedFilesInTrash() {
+        String filesVisibility = new FileListPage().openTrashPage().checkFilesVisibility(expectedFileList);
+        Assert.assertEquals(filesVisibility, GlobalParameters.EMPTY_STRING, "Deleted files are not in the Trash");
     }
 
-    @Test(description = "Check permanent delete of file from Trash", dependsOnMethods = "areDeletedFilesInTrash")
+    @Test(description = "Check permanent delete of file from Trash", dependsOnMethods = "checkDeletedFilesInTrash")
     public void deleteFilePermanentlyFromTrash() {
-        String actualMessage = new FileListPage().clickFileToSelect(GlobalParameters.FILE_NAME).clickDeleteButton()
-                .getNotificationMessageAboutMovedFile(GlobalParameters.FILE_NAME);
-        Assert.assertEquals(actualMessage, FILE_WAS_PERMANENTLY_DELETED_NOTIFICATION_MESSAGE, "Notification message doesn't match");
+        String actualMessage = new TrashFolder().selectFiles(oneFileSelectedList)
+                .rightFilePanelPage.clickDeleteButton().getNotificationMessageAboutMovedFile();
+        Assert.assertEquals(actualMessage, String.format(FILE_WAS_PERMANENTLY_DELETED_NOTIFICATION_MESSAGE, fileName), "Notification message doesn't match");
     }
 
     @Test(description = "Check that deleted file is not in the Trash Folder", dependsOnMethods = "deleteFilePermanentlyFromTrash")
-    public void isDeletedFileInTrashFolder() {
-        boolean checkFilesVisibility = new FileListPage().checkFilesVisibility(GlobalParameters.FILE_NAME);
-        Assert.assertFalse(checkFilesVisibility, "Deleted File is still in Trash Folder");
+    public void checkDeletedFileInTrashFolder() {
+        String fileVisibility = new FileListPage().checkFilesVisibility(oneFileSelectedList);
+        Assert.assertEquals(fileVisibility, String.format(EXPECTED_MESSAGE, fileName), "Deleted File is still in Trash Folder");
     }
 
-    @DataProvider(name = "filesDataProvider")
-    public Object[][] filesDataProvider() {
-        return new Object[][]{
-                {GlobalParameters.FILE_NAME},
-                {GlobalParameters.ADDITIONAL_FILE_NAME}
-        };
-    }*/
-
-    /*@AfterClass
+    @AfterClass
     public void clearTrash() {
         new TrashFolder().clearTrashFolder();
-    }*/
+    }
+
     @BeforeClass
     public void setFileLists() {
         oneFileSelectedList = new FilesUtils().getFileListForOperations(expectedFileList, 1);

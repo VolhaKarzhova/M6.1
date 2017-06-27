@@ -1,8 +1,8 @@
 package YandexDisk.tests;
 
 
-import YandexDisk.utils.FilesUtils;
 import YandexDisk.pages.LoginPage;
+import YandexDisk.utils.FilesUtils;
 import YandexDisk.utils.WebDriverSingleton;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -17,15 +17,13 @@ public class BaseTest {
     public List<File> expectedFileList;
 
     @BeforeClass
-    public void setUp() {
+    public void setUp() throws IOException {
+        expectedFileList = new FilesUtils().createFiles(2);
         loginPage = new LoginPage().open();
-    } @BeforeClass
-    public void filesCreation() throws IOException {
-        expectedFileList = new FilesUtils().createFiles(3);
     }
 
     @AfterClass
-    public void sutDown() {
+    public void shutDown() throws IOException {
         WebDriverSingleton.kill();
     }
 }
