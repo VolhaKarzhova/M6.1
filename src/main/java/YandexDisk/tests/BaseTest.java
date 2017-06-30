@@ -15,15 +15,19 @@ public class BaseTest {
 
     public LoginPage loginPage;
     public List<File> expectedFileList;
+    public List<File> oneFileSelectedList;
+
 
     @BeforeClass
     public void setUp() throws IOException {
         expectedFileList = new FilesUtils().createFiles(2);
+        oneFileSelectedList = new FilesUtils().getFileListForOperations(expectedFileList, 1);
         loginPage = new LoginPage().open();
     }
 
     @AfterClass
     public void shutDown() throws IOException {
         WebDriverSingleton.kill();
+        new FilesUtils().deleteTempFolder(FilesUtils.folder);
     }
 }

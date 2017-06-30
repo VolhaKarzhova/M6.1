@@ -2,8 +2,11 @@ package YandexDisk.tests;
 
 import YandexDisk.config.GlobalParameters;
 import YandexDisk.pages.FileListPage;
+import YandexDisk.pages.RightFilePanelPage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 
 public class UploadTest extends BaseTest {
@@ -20,5 +23,10 @@ public class UploadTest extends BaseTest {
         FileListPage fileListPage = new FileListPage().closePopUpWindow().closeRecentFilesPanel().uploadFiles(expectedFileList);
         String checkFileUpload = fileListPage.checkFilesVisibility(expectedFileList);
         Assert.assertEquals(checkFileUpload, GlobalParameters.EMPTY_STRING, "Not all the files were uploaded");
+    }
+
+    @Test(description = "Check downloaded file", dependsOnMethods = "uploadFiles")
+    public void downloadFile() throws IOException {
+        new RightFilePanelPage().downloadFiles(oneFileSelectedList);
     }
 }

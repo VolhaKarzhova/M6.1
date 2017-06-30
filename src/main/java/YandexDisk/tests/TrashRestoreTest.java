@@ -15,7 +15,6 @@ import java.util.List;
 
 public class TrashRestoreTest extends BaseTest {
 
-    private List<File> oneFileSelectedList;
     private static String fileName;
     private static final String FILE_WAS_PERMANENTLY_DELETED_NOTIFICATION_MESSAGE = "Файл «%s» был удален";
     private static final String FILE_WAS_DELETED_NOTIFICATION_MESSAGE = "Файл «%s» удален в Корзину";
@@ -105,7 +104,6 @@ public class TrashRestoreTest extends BaseTest {
 
     @BeforeClass
     public void setFileLists() {
-        oneFileSelectedList = new FilesUtils().getFileListForOperations(expectedFileList, 1);
         fileName = new FilesUtils().getFileName(oneFileSelectedList, 0);
     }
 }

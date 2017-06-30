@@ -113,4 +113,11 @@ public class FileListPage extends AbstractPage {
     public boolean isNotificationVisible() {
         return isElementVisible(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR);
     }
+
+    /*public String getURLForFoleUpload(List<File> files,String fileName) {
+        fileName = new FilesUtils().getFileName(files,0);
+        new Actions(driver).doubleClick(driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName)))).build().perform();
+        driver.switchTo().window()
+
+    }*/
 }

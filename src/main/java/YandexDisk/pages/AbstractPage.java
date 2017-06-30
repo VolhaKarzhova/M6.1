@@ -5,6 +5,7 @@ import com.google.common.base.Function;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -53,7 +54,7 @@ public class AbstractPage {
         driver.navigate().refresh();
     }
 
-    public void waitForFileDownload(File uploadFile) {
+    public void waitForFileDownload(final File uploadFile) {
         FluentWait wait = new FluentWait<File>(uploadFile).withTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         wait.until(new Function<File, Boolean>() {
             @Override

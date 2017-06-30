@@ -1,5 +1,7 @@
 package YandexDisk.utils;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,15 +9,15 @@ import java.util.List;
 
 public class FilesUtils {
 
-    public File dir;
+    public static File folder;
 
     public List<File> createFiles(int fileQuantity) throws IOException {
         List<File> fileList = new ArrayList<File>();
-        dir = new File("/" + RandomUtils.getFileDirectory());
-        dir.mkdir();
+        folder = new File(FileUtils.getTempDirectory() + "/" + RandomUtils.getFileDirectory());
+        folder.mkdir();
         for (int x = 0; x < fileQuantity; x++) {
-            File file = new File(dir, RandomUtils.getFileName() + ".txt");
-            org.apache.commons.io.FileUtils.writeStringToFile(file, RandomUtils.getFileContent(), "ISO-8859-1");
+            File file = new File(folder, RandomUtils.getFileName() + ".txt");
+            FileUtils.writeStringToFile(file, RandomUtils.getFileContent(), "ISO-8859-1");
             fileList.add(file);
         }
         return fileList;
@@ -31,5 +33,17 @@ public class FilesUtils {
             newFileList.add(fileList.get(i));
         }
         return newFileList;
+    }
+
+    public void deleteTempFolder(File file) {
+        if (!file.exists()) {
+            return;
+        }
+        if (file.isDirectory() && file.listFiles() != null) {
+            for (File files : file.listFiles()) {
+                deleteTempFolder(files);
+            }
+        }
+        file.delete();
     }
 }

@@ -1,8 +1,15 @@
 package YandexDisk.pages;
 
+import YandexDisk.utils.FilesUtils;
+import YandexDisk.utils.RandomUtils;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class RightFilePanelPage extends AbstractPage {
@@ -24,12 +31,16 @@ public class RightFilePanelPage extends AbstractPage {
         return new FileListPage();
     }
 
-    public FileListPage downloadFiles(List<File> fileList) {
+    public FilesUtils downloadFiles(List<File> fileList) {
+        new FileListPage().selectFiles(fileList);
         waitForElementVisible(DOWNLOAD_BUTTON_LOCATOR);
         driver.findElement(DOWNLOAD_BUTTON_LOCATOR).click();
+        File filePath = new File("C:/Users/Volha_Karzhova/Downloads");
         for (File file : fileList) {
+            file = new File(filePath, file.getName());
             waitForFileDownload(file);
+            return new FilesUtils();
         }
-        return new FileListPage();
+        return new FilesUtils();
     }
 }
