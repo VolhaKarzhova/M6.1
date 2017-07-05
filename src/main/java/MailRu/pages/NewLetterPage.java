@@ -38,6 +38,7 @@ public class NewLetterPage extends AbstractPage {
     }
 
     public String getEmptyLetterBodyAlertMessage() {
+        waitForElementVisible(ALERT_EMPTY_BODY_LOCATOR);
         return driver.findElement(ALERT_EMPTY_BODY_LOCATOR).getText();
     }
 
@@ -51,5 +52,9 @@ public class NewLetterPage extends AbstractPage {
     public String getInvalidAddresseeAlertMessage() {
         waitForAlertDisplayed();
         return driver.switchTo().alert().getText();
+    }
+
+    public boolean isAlertVisible() {
+        return isElementPresent(ALERT_EMPTY_BODY_LOCATOR);
     }
 }

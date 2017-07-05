@@ -37,4 +37,8 @@ public class AbstractPage {
     protected void refreshPage () {
         driver.navigate().refresh();
     }
+
+    protected boolean isElementPresent (By locator) {
+        return driver.findElement(locator).isDisplayed();
+    }
 }

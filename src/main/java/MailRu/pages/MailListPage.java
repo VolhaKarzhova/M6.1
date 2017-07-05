@@ -30,15 +30,14 @@ public class MailListPage extends AbstractPage {
     }
 
     public boolean isLetterVisible(String subject) {
-        boolean i = false;
         try {
             waitForElementVisible(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
             driver.findElement(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject))).isDisplayed();
-            i = true;
+            return true;
         } catch (TimeoutException exception) {
         } catch (NoSuchElementException exception) {
         }
-        return i;
+        return false;
     }
 
     public MailListPage clickLetterCheckbox(String subject) {
@@ -55,13 +54,13 @@ public class MailListPage extends AbstractPage {
         return new MailListPage();
     }
 
-    public MailListPage markLetterAsNoSpam(String subject) {
+    public MailListPage clickNoSpamButton(String subject) {
         driver.findElement(NO_SPAM_BUTTON_LOCATOR).click();
         waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         return new MailListPage();
     }
 
-    public MailListPage markLetterAsSpam(String subject) {
+    public MailListPage clickSpamButton(String subject) {
         driver.findElement(SPAM_BUTTON_LOCATOR).click();
         waitForElementEnabled(CONFIRM_SPAM_BUTTON_LOCATOR);
         driver.findElement(CONFIRM_SPAM_BUTTON_LOCATOR).click();

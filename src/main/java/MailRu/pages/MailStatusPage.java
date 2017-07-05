@@ -11,4 +11,8 @@ public class MailStatusPage extends AbstractPage {
         waitForElementVisible(MAIL_ADDRESSEE_LOCATOR);
         return driver.findElement(MAIL_ADDRESSEE_LOCATOR).getText();
     }
+
+    public boolean isAddresseeVisible(){
+        return isElementPresent(MAIL_ADDRESSEE_LOCATOR);
+    }
 }

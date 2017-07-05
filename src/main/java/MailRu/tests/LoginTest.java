@@ -1,5 +1,7 @@
 package MailRu.tests;
 
+import MailRu.business_objects.User;
+import MailRu.service.LoginService;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
@@ -16,22 +18,23 @@ public class LoginTest extends BaseTest {
     private static final String INVALID_CREDENTIALS_ERROR_MESSAGE = "Неверное имя или пароль";
     private static final String BLANK_LOGIN_ERROR_MESSAGE = "Введите имя ящика";
     private static final String BLANK_PASSWORD_ERROR_MESSAGE = "Введите пароль";
+    private static final User VALID_USER_ACCOUNT = new User(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD);
+    private static final LoginService loginService = new LoginService();
 
-    @Test(description = "Check displayed username for logged user account")
+    @Test(description = "Check displayed username for logged user USER")
     public void loginWithValidCredentials() {
-        HeaderMenuPage headerMenuPage = new LoginPage()
-                .login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD);
-        String userLogin = headerMenuPage.getUserLogin();
-        Assert.assertTrue(userLogin
-                        .equalsIgnoreCase(GlobalParameters.USER_LOGIN + GlobalParameters.USER_DOMAIN),
+        loginService.login(VALID_USER_ACCOUNT);
+        String userLogin = new HeaderMenuPage().getUserLogin();
+        Assert.assertTrue(userLogin.equalsIgnoreCase(VALID_USER_ACCOUNT.getLoginPart() + GlobalParameters.USER_DOMAIN),
                 "Login wasn't successful");
     }
 
     @Test(dataProvider = "credentialsDataProvider", priority = 1, description = "Check error messages match entered invalid credentials")
     @Parameters({"login", "password", "expectedErrorMessage"})
     public void loginWithInvalidLogin(String login, String password, String expectedErrorMessage) {
-        new LoginPage().login(login, password);
-        String errorMessage = new LoginPage().getErrorMessage();
+        User user = new User(login, password);
+        loginService.login(user);
+        String errorMessage = loginPage.getErrorMessage();
         Assert.assertEquals(errorMessage, expectedErrorMessage, "Error message doesn't match");
     }
 

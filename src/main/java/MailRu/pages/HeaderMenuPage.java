@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 public class HeaderMenuPage extends AbstractPage {
 
     private static final By NEW_LETTER_BUTTON_LOCATOR = By.cssSelector("a[data-name='compose']");
-    private static final By AUTHORIZATION_USER_LOCATOR = By.cssSelector("#PH_user-email");
+    public static final By AUTHORIZATION_USER_LOCATOR = By.cssSelector("#PH_user-email");
     public static final By LOGOUT_LINK_LOCATOR = By.xpath("//*[@id='PH_logoutLink']");
 
     public String getUserLogin() {

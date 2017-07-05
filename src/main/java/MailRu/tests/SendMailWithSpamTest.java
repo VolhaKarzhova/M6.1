@@ -1,108 +1,98 @@
 package MailRu.tests;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import MailRu.business_objects.Letter;
 import MailRu.config.GlobalParameters;
-import MailRu.pages.*;
+import MailRu.pages.MailStatusPage;
+import MailRu.pages.NewLetterPage;
+import MailRu.service.MailService;
 import MailRu.utils.RandomUtils;
 import MailRu.utils.Utils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class SendMailWithSpamTest extends BaseTest {
 
-    private static final String ALERT_EMPTY_BODY_MESSAGE = "Вы уверены, что хотите отправить пустое письмо?";
+    public static final String ALERT_EMPTY_BODY_MESSAGE = "Вы уверены, что хотите отправить пустое письмо?";
     private static final String ALERT_INVALID_ADDRESSEE_MESSAGE = "В поле «Кому» указан некорректный адрес получателя.\n" +
             "Исправьте ошибку и отправьте письмо ещё раз.";
-    private Letter blankLetter = new Letter(Utils.getAddressee(), GlobalParameters.BLANK_LETTER_SUBJECT_STRING, GlobalParameters.EMPTY_STRING);
-    private Letter expectedLetter = new Letter(Utils.getAddressee(), RandomUtils.getLetterSubject(), RandomUtils.getLetterBody());
+    public static Letter receivedBlankLetter = new Letter(Utils.getAddressee(), GlobalParameters.BLANK_LETTER_SUBJECT_STRING, GlobalParameters.EMPTY_STRING);
+    private static Letter letterWithOnlyAddressee = new Letter(Utils.getAddressee(), GlobalParameters.EMPTY_STRING, GlobalParameters.EMPTY_STRING);
+    public static Letter letterWithAllFieldsFilled = new Letter(Utils.getAddressee(), RandomUtils.getLetterSubject(), RandomUtils.getLetterBody());
+    private static Letter letterWithInvalidAddressee = new Letter(RandomUtils.getInvalidAddressee(), RandomUtils.getLetterSubject(),
+            RandomUtils.getLetterBody());
+    private MailService mailService = new MailService();
 
     @Test(description = "Check the possibility to create new letter and send it")
     public void sendNewMailWithAllFilledInputs() {
-        NewLetterPage newLetterPage = new LoginPage().login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD)
-                .clickNewLetterButton();
-        String addressee = newLetterPage.fillAllLetterInputs(expectedLetter.getAddressee(), expectedLetter.getSubject(),
-                expectedLetter.getBody()).sendMail().getAddresseeFromSuccessfulSendLetterMessage();
-        Assert.assertEquals(addressee, expectedLetter.getAddressee(), "Addressee of the sent letter doesn't match");
+        loginPage.login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD);
+        boolean isLetterSent = mailService.checkIfLetterIsSuccessfullySent(letterWithAllFieldsFilled);
+        Assert.assertTrue(isLetterSent, "Addressee of the sent letter doesn't match");
     }
 
     @Test(description = "Check that letter presents in the Sent Folder", dependsOnMethods = "sendNewMailWithAllFilledInputs")
-    public void isLetterInSentFolder() {
-        LeftMenuPage leftMenuPage = new LeftMenuPage();
-        Letter actualLetter = leftMenuPage.openSentFolder().openLetterBySubject(expectedLetter.getSubject()).getLetter();
-        Assert.assertEquals(actualLetter.toString(), expectedLetter.toString(), "Letter is not in the Sent Folder");
+    public void checkSentLetterInSentFolder() {
+        Letter actualLetter = mailService.getSentLetter(letterWithAllFieldsFilled);
+        Assert.assertEquals(actualLetter.toString(), letterWithAllFieldsFilled.toString(), "Letter is not in the Sent Folder");
     }
 
-    @Test(description = "Check that letter presents in the Inbox Folder", dependsOnMethods = "isLetterInSentFolder")
-    public void isLetterInInboxFolder() {
-        LeftMenuPage leftMenuPage = new LeftMenuPage();
-        Letter actualLetter = leftMenuPage.openInboxFolder().openLetterBySubject(expectedLetter.getSubject()).getLetter();
-        Assert.assertEquals(actualLetter.getAddressee(), expectedLetter.getAddressee(), "Letter is not in the Inbox folder");
+    @Test(description = "Check that letter presents in the Inbox Folder", dependsOnMethods = "checkSentLetterInSentFolder")
+    public void checkLetterInInboxFolder() {
+        Letter actualLetter = mailService.getReceivedLetter(letterWithAllFieldsFilled);
+        Assert.assertEquals(actualLetter.toString(), letterWithAllFieldsFilled.toString(), "Letter is not in the Inbox folder");
     }
 
-    @Test(description = "Check spam letter is removed from Inbox folder", dependsOnMethods = "isLetterInInboxFolder")
+    @Test(description = "Check spam letter is removed from Inbox folder", dependsOnMethods = "checkLetterInInboxFolder")
     public void markLetterAsSpam() {
-        MailListPage mailListPage = new LeftMenuPage().openInboxFolder().clickLetterCheckbox(expectedLetter.getSubject())
-                .markLetterAsSpam(expectedLetter.getSubject());
-        boolean isLetterPresent = mailListPage.isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterPresent = mailService.moveLetterToSpam(letterWithAllFieldsFilled);
         Assert.assertFalse(isLetterPresent, "Letter is still in the Inbox Folder");
     }
 
     @Test(description = "Check spam letter is in Spam folder", dependsOnMethods = "markLetterAsSpam")
     public void isLetterInSpamFolder() {
-        boolean isLetterPresent = new LeftMenuPage().openSpamFolder()
-                .isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterPresent = mailService.checkIsLetterPresentInSpamFolder(letterWithAllFieldsFilled);
         Assert.assertTrue(isLetterPresent, "Letter is not in the Spam Folder");
     }
 
     @Test(description = "Check letter disappeared from Spam Folder", dependsOnMethods = "isLetterInSpamFolder")
     public void markLetterAsNoSpam() {
-        boolean isLetterPresent = new MailListPage().clickLetterCheckbox(expectedLetter.getSubject())
-                .markLetterAsNoSpam(expectedLetter.getSubject()).isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterPresent = mailService.moveLetterFromSpam(letterWithAllFieldsFilled);
         Assert.assertFalse(isLetterPresent, "Letter is still in the Spam Folder");
     }
 
     @Test(description = "Check letter disappeared from Spam Folder", dependsOnMethods = "markLetterAsNoSpam")
     public void isNoSpamLetterReturnedToInbox() {
-        boolean isLetterPresent = new LeftMenuPage().openInboxFolder()
-                .isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterPresent = mailService.checkIsLetterPresentInInboxFolder(letterWithAllFieldsFilled);
         Assert.assertTrue(isLetterPresent, "Letter is not in the Inbox Folder");
     }
 
     @Test(description = "Check alert message while sending letter without subject and body", dependsOnMethods = "isNoSpamLetterReturnedToInbox")
     public void isAlertVisibleWhenSendingLetterWithOnlyAddresseeFilled() {
-        NewLetterPage newLetterPage = new HeaderMenuPage().clickNewLetterButton();
-        newLetterPage.fillAllLetterInputs(blankLetter.getAddressee(), GlobalParameters.EMPTY_STRING,
-                GlobalParameters.EMPTY_STRING).sendMail();
-        String alert = newLetterPage.getEmptyLetterBodyAlertMessage();
-        Assert.assertEquals(alert, ALERT_EMPTY_BODY_MESSAGE, "Alert message doesn't match");
+        boolean isAlertContentExpected = mailService.checkAlertMessageWhileSendingLetterWithBlankSubject(letterWithOnlyAddressee);
+        Assert.assertTrue(isAlertContentExpected,  "Alert message doesn't match");
     }
 
     @Test(description = "Check that sending mail with no subject and body was successful", dependsOnMethods = "isAlertVisibleWhenSendingLetterWithOnlyAddresseeFilled")
     public void sendMailWithBlankSubjectAndBodyInputs() {
-        String addressee = new NewLetterPage().confirmSendingLetterOnAlert().getAddresseeFromSuccessfulSendLetterMessage();
-        Assert.assertEquals(addressee, blankLetter.getAddressee(), "Addressee of the sent letter doesn't match");
+        boolean isLetterSent = mailService.checkIfLetterIsSuccessfullySent(letterWithOnlyAddressee);
+        Assert.assertTrue(isLetterSent, "Addressee of the sent letter doesn't match");
     }
 
     @Test(description = "Check that letter without Subject and Body presents in the Sent Folder", dependsOnMethods = "sendMailWithBlankSubjectAndBodyInputs")
-    public void isLetterWithOnlyAddresseeFilledInSentFolder() {
-        Letter actualLetter = new LeftMenuPage().openSentFolder()
-                .openLetterWithoutSubject().getLetter();
-        Assert.assertEquals(actualLetter.toString(), blankLetter.toString(), "Letter is not in the Sent Folder");
+    public void checkLetterWithOnlyAddresseeFilledInSentFolder() {
+        Letter actualLetter = mailService.getSentLetterWithBlankSubject();
+        Assert.assertEquals(actualLetter.toString(), receivedBlankLetter.toString(), "Letter is not in the Sent Folder");
     }
 
-    @Test(description = "Check that letter without Subject and Body presents in the Inbox Folder", dependsOnMethods = "isLetterWithOnlyAddresseeFilledInSentFolder")
+    @Test(description = "Check that letter without Subject and Body presents in the Inbox Folder", dependsOnMethods = "checkLetterWithOnlyAddresseeFilledInSentFolder")
     public void isLetterWithOnlyAddresseeFilledInInboxFolder() {
-        Letter actualLetter = new LeftMenuPage().openInboxFolder()
-                .openLetterWithoutSubject().getLetter();
-        Assert.assertEquals(actualLetter.toString(), blankLetter.toString(), "Letter is not in the Inbox Folder");
+        Letter actualLetter = mailService.getReceivedLetterWithBlankSubject();
+        Assert.assertEquals(actualLetter.toString(), receivedBlankLetter.toString(), "Letter is not in the Inbox Folder");
     }
 
     @Test(description = "Check invalid Addressee alert message", dependsOnMethods = "isLetterWithOnlyAddresseeFilledInInboxFolder")
     public void sendMailWithInvalidAddressee() {
-        NewLetterPage newLetterPage = new HeaderMenuPage().clickNewLetterButton();
-        newLetterPage.fillAllLetterInputs(RandomUtils.getInvalidAddressee(), RandomUtils.getLetterSubject(),
-                RandomUtils.getLetterBody()).sendMail();
-        String alert = newLetterPage.getInvalidAddresseeAlertMessage();
+        //mailService.sendLetter(letterWithInvalidAddressee);
+        String alert = new NewLetterPage().getInvalidAddresseeAlertMessage();
         Assert.assertEquals(alert, ALERT_INVALID_ADDRESSEE_MESSAGE, "Text of alert doesn't match");
     }
 }
