@@ -22,7 +22,6 @@ public class FileListPage extends AbstractPage {
     private static final By POPUP_CLOSE_BUTTON_LOCATOR = By.xpath("//a[contains(@class,'popup-close')]");
     private static final By HIDE_RECENT_FILES_BUTTON_LOCATOR = By.xpath("//div[contains(@class,'recent-files__hide')]");
     private static final String FILE_LOCATOR = "//div[@title='%s']";
-    private static final String CHECKED_CHECKBOX_LOCATOR = "//div[@title='%s'][contains(@class,'nb-resource_checked')]";
     private static final String UPLOAD_DONE_LOCATOR = "//div[contains(@data-key, '%s')]//div[contains(@class,'done')]";
     public static final By NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR = By.xpath("//div[contains(@class,'notifications__text')]");
 
@@ -113,11 +112,4 @@ public class FileListPage extends AbstractPage {
     public boolean isNotificationVisible() {
         return isElementVisible(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR);
     }
-
-    /*public String getURLForFoleUpload(List<File> files,String fileName) {
-        fileName = new FilesUtils().getFileName(files,0);
-        new Actions(driver).doubleClick(driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName)))).build().perform();
-        driver.switchTo().window()
-
-    }*/
 }

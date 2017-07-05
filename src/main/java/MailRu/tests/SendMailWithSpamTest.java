@@ -2,7 +2,7 @@ package MailRu.tests;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import MailRu.businessObjects.Letter;
+import MailRu.business_objects.Letter;
 import MailRu.config.GlobalParameters;
 import MailRu.pages.*;
 import MailRu.utils.RandomUtils;

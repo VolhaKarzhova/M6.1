@@ -1,4 +1,4 @@
-package MailRu.businessObjects;
+package MailRu.business_objects;
 
 public class Letter {
 

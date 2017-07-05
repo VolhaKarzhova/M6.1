@@ -10,9 +10,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.util.List;
-
 public class TrashRestoreTest extends BaseTest {
 
     private static String fileName;
@@ -23,7 +20,7 @@ public class TrashRestoreTest extends BaseTest {
 
     @Test(description = "Check that file is moved to Trash")
     public void deleteOneFile() {
-        FileListPage fileListPage = new LoginPage().login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD)
+        FileListPage fileListPage = new LoginPage().login(user.getLogin(), user.getPassword())
                 .closePopUpWindow().uploadFiles(expectedFileList);
         String actualMessage = fileListPage.moveFilesToTrash(oneFileSelectedList)
                 .getNotificationMessageAboutMovedFile();
@@ -75,7 +72,7 @@ public class TrashRestoreTest extends BaseTest {
     @Test(description = "Check that deleted file are in Trash", dependsOnMethods = "deleteSeveralFilesAtOnce")
     public void checkDeletedFilesInMainFolder() {
         String filesVisibility = new FileListPage().checkFilesVisibility(expectedFileList);
-        Assert.assertTrue(filesVisibility.contains(String.format(EXPECTED_MESSAGE, fileName)), "Some deleted file are still in the Main Folder");
+        Assert.assertFalse(filesVisibility.isEmpty(), "Some deleted file are still in the Main Folder");
     }
 
     @Test(description = "Check that deleted file are in Trash", dependsOnMethods = "checkDeletedFilesInMainFolder")
@@ -103,7 +100,7 @@ public class TrashRestoreTest extends BaseTest {
     }
 
     @BeforeClass
-    public void setFileLists() {
+    public void setFileName() {
         fileName = new FilesUtils().getFileName(oneFileSelectedList, 0);
     }
 }
