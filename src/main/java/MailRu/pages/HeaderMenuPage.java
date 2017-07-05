@@ -9,10 +9,6 @@ public class HeaderMenuPage extends AbstractPage {
     private static final By AUTHORIZATION_USER_LOCATOR = By.cssSelector("#PH_user-email");
     public static final By LOGOUT_LINK_LOCATOR = By.xpath("//*[@id='PH_logoutLink']");
 
-    public HeaderMenuPage(WebDriver driver) {
-        super(driver);
-    }
-
     public String getUserLogin() {
         waitForElementVisible(AUTHORIZATION_USER_LOCATOR);
         return AUTHORIZATION_USER_LOCATOR.findElement(driver).getText();
@@ -21,13 +17,13 @@ public class HeaderMenuPage extends AbstractPage {
     public LoginPage logout() {
         driver.findElement(LOGOUT_LINK_LOCATOR).click();
         waitForElementVisible(LoginPage.LOGIN_BUTTON_LOCATOR);
-        return new LoginPage(driver);
+        return new LoginPage();
     }
 
     public NewLetterPage clickNewLetterButton() {
         waitForElementEnabled(NEW_LETTER_BUTTON_LOCATOR);
         driver.findElement(NEW_LETTER_BUTTON_LOCATOR).click();
-        return new NewLetterPage(driver);
+        return new NewLetterPage();
     }
 
     public boolean isLogOutButtonVisible() {

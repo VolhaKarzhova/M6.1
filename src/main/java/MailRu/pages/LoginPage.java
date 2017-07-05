@@ -1,5 +1,6 @@
 package MailRu.pages;
 
+import MailRu.config.GlobalParameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -10,8 +11,9 @@ public class LoginPage extends AbstractPage {
     private static final By AUTHENTICATION_ERROR_MESSAGE_LOCATOR = By.xpath("//*[@id='mailbox:authfail']");
     public static final By LOGIN_BUTTON_LOCATOR = By.className("mailbox__auth__button");
 
-    public LoginPage(WebDriver driver) {
-        super(driver);
+    public LoginPage open() {
+        driver.get(GlobalParameters.URL);
+        return this;
     }
 
     public HeaderMenuPage login(String login, String password) {
@@ -21,7 +23,7 @@ public class LoginPage extends AbstractPage {
         driver.findElement(PASSWORD_INPUT_LOCATOR).clear();
         driver.findElement(PASSWORD_INPUT_LOCATOR).sendKeys(password);
         driver.findElement(LOGIN_BUTTON_LOCATOR).click();
-        return new HeaderMenuPage(driver);
+        return new HeaderMenuPage();
     }
 
     public String getErrorMessage() {

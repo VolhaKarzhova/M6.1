@@ -19,7 +19,7 @@ public class LoginTest extends BaseTest {
 
     @Test(description = "Check displayed username for logged user account")
     public void loginWithValidCredentials() {
-        HeaderMenuPage headerMenuPage = new LoginPage(driver)
+        HeaderMenuPage headerMenuPage = new LoginPage()
                 .login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD);
         String userLogin = headerMenuPage.getUserLogin();
         Assert.assertTrue(userLogin
@@ -30,8 +30,8 @@ public class LoginTest extends BaseTest {
     @Test(dataProvider = "credentialsDataProvider", priority = 1, description = "Check error messages match entered invalid credentials")
     @Parameters({"login", "password", "expectedErrorMessage"})
     public void loginWithInvalidLogin(String login, String password, String expectedErrorMessage) {
-        new LoginPage(driver).login(login, password);
-        String errorMessage = new LoginPage(driver).getErrorMessage();
+        new LoginPage().login(login, password);
+        String errorMessage = new LoginPage().getErrorMessage();
         Assert.assertEquals(errorMessage, expectedErrorMessage, "Error message doesn't match");
     }
 
@@ -48,7 +48,7 @@ public class LoginTest extends BaseTest {
 
     @AfterMethod
     public void logout() {
-        HeaderMenuPage headerMenuPage = new HeaderMenuPage(driver);
+        HeaderMenuPage headerMenuPage = new HeaderMenuPage();
         if (headerMenuPage.isLogOutButtonVisible()) {
             headerMenuPage.logout();
         }

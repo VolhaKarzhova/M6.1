@@ -11,10 +11,6 @@ public class ContentLetterPage extends AbstractPage {
     private static final By SUBJECT_MAIL_LOCATOR = By.xpath("//div[@class='b-letter__head__subj__text']");
     private static final By BODY_MAIL_LOCATOR = By.xpath("//div[contains(@id, 'BODY')]");
 
-    public ContentLetterPage(WebDriver driver) {
-        super(driver);
-    }
-
     public Letter getLetter() {
         String addressee = driver.findElement(ADDRESSEE_MAIL_LOCATOR).getText();
         String subject = driver.findElement(SUBJECT_MAIL_LOCATOR).getText();

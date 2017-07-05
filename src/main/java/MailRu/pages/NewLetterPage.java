@@ -5,7 +5,7 @@ import org.openqa.selenium.WebDriver;
 
 public class NewLetterPage extends AbstractPage {
 
-    public LeftMenuPage leftMenuPage = new LeftMenuPage(driver);
+    public LeftMenuPage leftMenuPage = new LeftMenuPage();
 
     private static final By ADDRESSEE_INPUT_LOCATOR = By.xpath("//*[@data-original-name='To']");
     private static final By SUBJECT_INPUT_LOCATOR = By.name("Subject");
@@ -16,10 +16,6 @@ public class NewLetterPage extends AbstractPage {
     private static final By ALERT_EMPTY_BODY_LOCATOR = By.xpath("//div[contains(@class,'empty')]//div[@class='popup__desc']");
     private static final By ALERT_CONFIRM_BUTTON_LOCATOR = By.xpath("//div[@class='is-compose-empty_in']//button[contains(@class, 'confirm-ok')]");
     private static final By SAVED_AS_DRAFT_MESSAGE_LOCATOR = By.xpath("//div[@class='b-toolbar__message']/a");
-
-    public NewLetterPage(WebDriver driver) {
-        super(driver);
-    }
 
     public NewLetterPage fillAllLetterInputs(String addressee, String subject, String body) {
         driver.findElement(ADDRESSEE_INPUT_LOCATOR).sendKeys(addressee);
@@ -38,7 +34,7 @@ public class NewLetterPage extends AbstractPage {
 
     public MailStatusPage sendMail() {
         driver.findElement(SEND_BUTTON_LOCATOR).click();
-        return new MailStatusPage(driver);
+        return new MailStatusPage();
     }
 
     public String getEmptyLetterBodyAlertMessage() {
@@ -49,7 +45,7 @@ public class NewLetterPage extends AbstractPage {
         waitForElementEnabled(ALERT_CONFIRM_BUTTON_LOCATOR);
         driver.findElement(ALERT_CONFIRM_BUTTON_LOCATOR).click();
         waitForElementVisible(MailStatusPage.MAIL_ADDRESSEE_LOCATOR);
-        return new MailStatusPage(driver);
+        return new MailStatusPage();
     }
 
     public String getInvalidAddresseeAlertMessage() {

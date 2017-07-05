@@ -1,5 +1,6 @@
 package MailRu.pages;
 
+import YandexDisk.utils.WebDriverSingleton;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -8,11 +9,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class AbstractPage {
 
     private static final int WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 30;
-
     protected WebDriver driver;
 
-    public AbstractPage(WebDriver driver) {
-        this.driver = driver;
+    protected AbstractPage() {
+        this.driver = WebDriverSingleton.getWebDriverInstance();
     }
 
     protected void waitForElementPresent(By locator) {
