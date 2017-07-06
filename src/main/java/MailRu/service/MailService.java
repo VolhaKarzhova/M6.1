@@ -4,8 +4,6 @@ import MailRu.business_objects.Letter;
 import MailRu.pages.*;
 import MailRu.tests.SendMailWithSpamTest;
 
-import java.util.NoSuchElementException;
-
 public class MailService extends AbstractPage {
 
     public boolean moveLetterToSpam(Letter letter) {
@@ -22,17 +20,10 @@ public class MailService extends AbstractPage {
         return checkLetterVisibility(letter);
     }
 
-    public boolean checkIfLetterIsSuccessfullySent(Letter letter) {
-        sendLetter(letter);
-        NewLetterPage newLetterPage = new NewLetterPage();
-        String addressee;
-        try {
-            newLetterPage.confirmSendingLetterOnAlert();
-        } catch (Exception e) {
-        } finally {
-            addressee = new MailStatusPage().getAddresseeFromSuccessfulSendLetterMessage();
-        }
-        return (addressee.equalsIgnoreCase(SendMailWithSpamTest.letterWithAllFieldsFilled.getAddressee()));
+    public boolean checkDraftMailIsSavedInDraftFolder(Letter letter) {
+        new HeaderMenuPage().clickNewLetterButton();
+        new NewLetterPage().fillAllLetterInputs(letter.getAddressee(), letter.getSubject(), letter.getBody()).saveDraftMail();
+        return checkIsLetterPresentInDraftFolder(letter);
     }
 
     public boolean checkAlertMessageWhileSendingLetterWithBlankSubject(Letter letter) {
@@ -41,8 +32,25 @@ public class MailService extends AbstractPage {
         return (alert.equalsIgnoreCase(SendMailWithSpamTest.ALERT_EMPTY_BODY_MESSAGE));
     }
 
-    public boolean checkIsLetterPresentInSentFolder(Letter letter) {
-        new LeftMenuPage().openSentFolder();
+    public boolean checkAlertMessageWhileSendingLetterWithInvalidAddressee(Letter letter) {
+        sendLetter(letter);
+        String alert = new NewLetterPage().getInvalidAddresseeAlertMessage();
+        return (alert.equalsIgnoreCase(SendMailWithSpamTest.ALERT_INVALID_ADDRESSEE_MESSAGE));
+    }
+
+    public boolean checkAddresseeFromSuccessfulSendLetterMessage(Letter letter) {
+        sendLetter(letter);
+        String addressee = new MailStatusPage().getAddresseeFromSuccessfulSendLetterMessage();
+        return (addressee.equalsIgnoreCase(SendMailWithSpamTest.letterWithAllFieldsFilled.getAddressee()));
+    }
+
+    public boolean checkAddresseeAfterSendingLetterWithBlankSubject(Letter letter) {
+        String addressee = new NewLetterPage().confirmSendingLetterOnAlert().getAddresseeFromSuccessfulSendLetterMessage();
+        return (addressee.equalsIgnoreCase(letter.getAddressee()));
+    }
+
+    public boolean checkDeletedLetterInFolder(Letter letter) {
+        new MailListPage().deleteLetter(letter.getSubject());
         return checkLetterVisibility(letter);
     }
 
@@ -58,6 +66,11 @@ public class MailService extends AbstractPage {
 
     public boolean checkIsLetterPresentInSpamFolder(Letter letter) {
         new LeftMenuPage().openSpamFolder();
+        return checkLetterVisibility(letter);
+    }
+
+    private boolean checkIsLetterPresentInDraftFolder(Letter letter) {
+        new LeftMenuPage().openDraftFolder();
         return checkLetterVisibility(letter);
     }
 

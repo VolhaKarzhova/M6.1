@@ -2,8 +2,8 @@ package MailRu.tests;
 
 import MailRu.business_objects.Letter;
 import MailRu.config.GlobalParameters;
-import MailRu.pages.MailStatusPage;
 import MailRu.pages.NewLetterPage;
+import MailRu.service.AuthorizationService;
 import MailRu.service.MailService;
 import MailRu.utils.RandomUtils;
 import MailRu.utils.Utils;
@@ -13,20 +13,21 @@ import org.testng.annotations.Test;
 public class SendMailWithSpamTest extends BaseTest {
 
     public static final String ALERT_EMPTY_BODY_MESSAGE = "Вы уверены, что хотите отправить пустое письмо?";
-    private static final String ALERT_INVALID_ADDRESSEE_MESSAGE = "В поле «Кому» указан некорректный адрес получателя.\n" +
+    public static final String ALERT_INVALID_ADDRESSEE_MESSAGE = "В поле «Кому» указан некорректный адрес получателя.\n" +
             "Исправьте ошибку и отправьте письмо ещё раз.";
-    public static Letter receivedBlankLetter = new Letter(Utils.getAddressee(), GlobalParameters.BLANK_LETTER_SUBJECT_STRING, GlobalParameters.EMPTY_STRING);
+    private static Letter receivedBlankLetter = new Letter(Utils.getAddressee(), GlobalParameters.BLANK_LETTER_SUBJECT_STRING, GlobalParameters.EMPTY_STRING);
     private static Letter letterWithOnlyAddressee = new Letter(Utils.getAddressee(), GlobalParameters.EMPTY_STRING, GlobalParameters.EMPTY_STRING);
     public static Letter letterWithAllFieldsFilled = new Letter(Utils.getAddressee(), RandomUtils.getLetterSubject(), RandomUtils.getLetterBody());
     private static Letter letterWithInvalidAddressee = new Letter(RandomUtils.getInvalidAddressee(), RandomUtils.getLetterSubject(),
             RandomUtils.getLetterBody());
     private MailService mailService = new MailService();
+    private AuthorizationService authorizationService = new AuthorizationService();
 
     @Test(description = "Check the possibility to create new letter and send it")
     public void sendNewMailWithAllFilledInputs() {
-        loginPage.login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD);
-        boolean isLetterSent = mailService.checkIfLetterIsSuccessfullySent(letterWithAllFieldsFilled);
-        Assert.assertTrue(isLetterSent, "Addressee of the sent letter doesn't match");
+        authorizationService.doLogin(LoginTest.VALID_USER_ACCOUNT);
+        boolean doesAddresseeMatch = mailService.checkAddresseeFromSuccessfulSendLetterMessage(letterWithAllFieldsFilled);
+        Assert.assertTrue(doesAddresseeMatch, "Addressee of the sent letter doesn't match");
     }
 
     @Test(description = "Check that letter presents in the Sent Folder", dependsOnMethods = "sendNewMailWithAllFilledInputs")
@@ -73,8 +74,8 @@ public class SendMailWithSpamTest extends BaseTest {
 
     @Test(description = "Check that sending mail with no subject and body was successful", dependsOnMethods = "isAlertVisibleWhenSendingLetterWithOnlyAddresseeFilled")
     public void sendMailWithBlankSubjectAndBodyInputs() {
-        boolean isLetterSent = mailService.checkIfLetterIsSuccessfullySent(letterWithOnlyAddressee);
-        Assert.assertTrue(isLetterSent, "Addressee of the sent letter doesn't match");
+        boolean doesAddresseeMatch = mailService.checkAddresseeAfterSendingLetterWithBlankSubject(letterWithOnlyAddressee);
+        Assert.assertTrue(doesAddresseeMatch, "Addressee of the sent letter doesn't match");
     }
 
     @Test(description = "Check that letter without Subject and Body presents in the Sent Folder", dependsOnMethods = "sendMailWithBlankSubjectAndBodyInputs")
@@ -91,8 +92,7 @@ public class SendMailWithSpamTest extends BaseTest {
 
     @Test(description = "Check invalid Addressee alert message", dependsOnMethods = "isLetterWithOnlyAddresseeFilledInInboxFolder")
     public void sendMailWithInvalidAddressee() {
-        //mailService.sendLetter(letterWithInvalidAddressee);
-        String alert = new NewLetterPage().getInvalidAddresseeAlertMessage();
-        Assert.assertEquals(alert, ALERT_INVALID_ADDRESSEE_MESSAGE, "Text of alert doesn't match");
+        boolean doesAlertMessageMatch = mailService.checkAlertMessageWhileSendingLetterWithInvalidAddressee(letterWithInvalidAddressee);
+        Assert.assertTrue(doesAlertMessageMatch, "Text of alert doesn't match");
     }
 }

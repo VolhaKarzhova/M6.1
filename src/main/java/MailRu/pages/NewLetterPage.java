@@ -53,8 +53,4 @@ public class NewLetterPage extends AbstractPage {
         waitForAlertDisplayed();
         return driver.switchTo().alert().getText();
     }
-
-    public boolean isAlertVisible() {
-        return isElementPresent(ALERT_EMPTY_BODY_LOCATOR);
-    }
 }

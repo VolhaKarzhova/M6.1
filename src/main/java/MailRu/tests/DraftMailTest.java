@@ -1,47 +1,43 @@
 package MailRu.tests;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import MailRu.business_objects.Letter;
 import MailRu.config.GlobalParameters;
-import MailRu.pages.LeftMenuPage;
 import MailRu.pages.LoginPage;
-import MailRu.pages.MailListPage;
-import MailRu.pages.NewLetterPage;
+import MailRu.service.AuthorizationService;
+import MailRu.service.MailService;
 import MailRu.utils.RandomUtils;
 import MailRu.utils.Utils;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class DraftMailTest extends BaseTest {
 
-    private Letter expectedLetter = new Letter(Utils.getAddressee(), RandomUtils.getLetterSubject(), RandomUtils.getLetterBody());
+    private Letter draftLetter = new Letter(Utils.getAddressee(), RandomUtils.getLetterSubject(), RandomUtils.getLetterBody());
+    private MailService mailService = new MailService();
+    private AuthorizationService authorizationService = new AuthorizationService();
 
     @Test(description = "Check letter is saved in Draft Folder")
     public void saveDraftLetter() {
-        NewLetterPage newLetterPage = new LoginPage().login(GlobalParameters.USER_LOGIN, GlobalParameters.USER_PASSWORD)
-                .clickNewLetterButton();
-        MailListPage mailListPage = newLetterPage.fillAllLetterInputs(expectedLetter.getAddressee(), expectedLetter.getSubject(), expectedLetter.getBody())
-                .saveDraftMail().leftMenuPage.openDraftFolder();
-        Assert.assertTrue(mailListPage.isLetterVisible(expectedLetter.getSubject()), "Letter is not in the Draft Folder");
+        authorizationService.doLogin(LoginTest.VALID_USER_ACCOUNT);
+        boolean isLetterVisible = mailService.checkDraftMailIsSavedInDraftFolder(draftLetter);
+        Assert.assertTrue(isLetterVisible, "Letter is not in the Draft Folder");
     }
 
     @Test(description = "Check that deleted letter is not in the Draft Folder", dependsOnMethods = "saveDraftLetter")
     public void deleteDraftLetter() {
-        boolean isLetterVisible = new MailListPage()
-                .deleteLetter(expectedLetter.getSubject()).isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterVisible = mailService.checkDeletedLetterInFolder(draftLetter);
         Assert.assertFalse(isLetterVisible, "Deleted letter is still in the Draft Folder");
     }
 
     @Test(description = "Check deleted letter presents in Trash", dependsOnMethods = "deleteDraftLetter")
     public void isLetterInDeletedFolder() {
-        boolean isLetterVisible = new LeftMenuPage().openDeletedFolder()
-                .isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterVisible = mailService.checkIsLetterPresentInTrashFolder(draftLetter);
         Assert.assertTrue(isLetterVisible, "Deleted letter is not in the Trash Folder");
     }
 
     @Test(description = "Delete letter permanently", dependsOnMethods = "isLetterInDeletedFolder")
     public void deleteLetterFromDeletedFolder() {
-        boolean isLetterVisible = new MailListPage()
-                .deleteLetter(expectedLetter.getSubject()).isLetterVisible(expectedLetter.getSubject());
+        boolean isLetterVisible = mailService.checkDeletedLetterInFolder(draftLetter);
         Assert.assertFalse(isLetterVisible, "Deleted letter is still i the Trash Folder");
     }
 }

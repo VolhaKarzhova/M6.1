@@ -7,7 +7,7 @@ import org.testng.annotations.BeforeClass;
 
 public class BaseTest {
 
-    public LoginPage loginPage = new LoginPage();
+    private LoginPage loginPage = new LoginPage();
 
     @BeforeClass
     public void setUp() {

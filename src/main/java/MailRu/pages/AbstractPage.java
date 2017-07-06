@@ -1,6 +1,6 @@
 package MailRu.pages;
 
-import YandexDisk.utils.WebDriverSingleton;
+import MailRu.utils.WebDriverSingleton;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;

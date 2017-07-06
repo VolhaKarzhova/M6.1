@@ -1,6 +1,5 @@
 package YandexDisk.tests;
 
-import YandexDisk.business_objects.User;
 import YandexDisk.config.GlobalParameters;
 import YandexDisk.pages.FileListPage;
 import YandexDisk.pages.RightFilePanelPage;
@@ -13,7 +12,7 @@ import java.io.IOException;
 
 public class DownloadUploadTest extends BaseTest {
 
-    @Test(description = "Check successful login")
+    @Test(description = "Check successful doLogin")
     public void login() {
         FileListPage fileListPage = loginPage.login(user.getLogin(), user.getPassword());
         String actualUserLogin = fileListPage.getUserLogin();
