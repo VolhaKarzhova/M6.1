@@ -1,11 +1,8 @@
 package MailRu.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 public class NewLetterPage extends AbstractPage {
-
-    public LeftMenuPage leftMenuPage = new LeftMenuPage();
 
     private static final By ADDRESSEE_INPUT_LOCATOR = By.xpath("//*[@data-original-name='To']");
     private static final By SUBJECT_INPUT_LOCATOR = By.name("Subject");

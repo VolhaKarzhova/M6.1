@@ -1,9 +1,8 @@
 package MailRu.pages;
 
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import MailRu.business_objects.Letter;
+import org.openqa.selenium.By;
 
 public class ContentLetterPage extends AbstractPage {
 

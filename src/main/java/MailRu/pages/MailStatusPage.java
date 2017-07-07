@@ -1,7 +1,6 @@
 package MailRu.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 public class MailStatusPage extends AbstractPage {
 
@@ -10,9 +9,5 @@ public class MailStatusPage extends AbstractPage {
     public String getAddresseeFromSuccessfulSendLetterMessage() {
         waitForElementVisible(MAIL_ADDRESSEE_LOCATOR);
         return driver.findElement(MAIL_ADDRESSEE_LOCATOR).getText();
-    }
-
-    public boolean isAddresseeVisible(){
-        return isElementPresent(MAIL_ADDRESSEE_LOCATOR);
     }
 }

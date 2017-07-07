@@ -12,7 +12,7 @@ import java.util.List;
 
 public class FileListPage extends AbstractPage {
 
-    public RightFilePanelPage rightFilePanelPage = new RightFilePanelPage();
+    public RightPanelPage rightFilePanelPage = new RightPanelPage();
 
     private static final By HEADER_USERNAME_LOCATOR = By.xpath("//span[@class='header__username']");
     private static final By UPLOAD_POPUP_CLOSE_BUTTON_LOCATOR = By.xpath("//a[@data-click-action='dialog.close']");
@@ -68,16 +68,17 @@ public class FileListPage extends AbstractPage {
     }
 
     public FileListPage moveFilesToTrash(List<File> fileList) {
-        selectFiles(fileList);
+        Actions action = new Actions(driver);
         String fileName = new FilesUtils().getFileName(fileList, 0);
         WebElement file = driver.findElement(By.xpath(String.format(FILE_LOCATOR, fileName)));
         WebElement trash = driver.findElement(TRASH_ICON_LOCATOR);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 5; i++) {
             try {
-                new Actions(driver).dragAndDrop(file, trash).build().perform();
+                action.dragAndDrop(file, trash).build().perform();
             } catch (StaleElementReferenceException e) {
             }
-        waitForElementVisible(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR);
+            waitForElementVisible(NOTIFICATION_ABOUT_FILE_MOVED_LOCATOR);
+        }
         return this;
     }
 

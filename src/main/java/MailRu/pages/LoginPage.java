@@ -7,7 +7,7 @@ public class LoginPage extends AbstractPage {
 
     private static final By LOGIN_INPUT_LOCATOR = By.id("mailbox__login");
     private static final By PASSWORD_INPUT_LOCATOR = By.cssSelector("#mailbox__password");
-    public static final By AUTHENTICATION_ERROR_MESSAGE_LOCATOR = By.xpath("//*[@id='mailbox:authfail']");
+    private static final By AUTHENTICATION_ERROR_MESSAGE_LOCATOR = By.xpath("//*[@id='mailbox:authfail']");
     public static final By LOGIN_BUTTON_LOCATOR = By.className("mailbox__auth__button");
 
     public LoginPage open() {
@@ -16,6 +16,7 @@ public class LoginPage extends AbstractPage {
     }
 
     public HeaderMenuPage login(String login, String password) {
+        refreshPage();
         waitForElementVisible(LOGIN_INPUT_LOCATOR);
         driver.findElement(LOGIN_INPUT_LOCATOR).clear();
         driver.findElement(LOGIN_INPUT_LOCATOR).sendKeys(login);

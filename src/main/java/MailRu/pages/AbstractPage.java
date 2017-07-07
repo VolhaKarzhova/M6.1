@@ -34,11 +34,8 @@ public class AbstractPage {
     protected void waitForAlertDisplayed() {
         new WebDriverWait(driver, WAIT_FOR_ELEMENT_TIMEOUT_SECONDS).until(ExpectedConditions.alertIsPresent());
     }
-    protected void refreshPage () {
-        driver.navigate().refresh();
-    }
 
-    protected boolean isElementPresent (By locator) {
-        return driver.findElement(locator).isDisplayed();
+    protected void refreshPage() {
+        driver.navigate().refresh();
     }
 }

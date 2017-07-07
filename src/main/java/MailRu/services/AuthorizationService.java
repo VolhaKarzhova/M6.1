@@ -1,4 +1,4 @@
-package MailRu.service;
+package MailRu.services;
 
 
 import MailRu.business_objects.User;
@@ -13,17 +13,12 @@ public class AuthorizationService extends AbstractPage {
         new LoginPage().login(user.getLoginPart(), user.getPassword());
     }
 
-    public boolean checkUserLoginAfterAuthorization(User user) {
-        doLogin(user);
-        String userLogin = new HeaderMenuPage().getUserLogin();
-        return (userLogin.equalsIgnoreCase(user.getLoginPart() + GlobalParameters.USER_DOMAIN));
+    public boolean doesUserLoginAfterAuthorizationMatchExpected(User user) {
+        return (new HeaderMenuPage().getUserLogin().equalsIgnoreCase(user.getLoginPart() + GlobalParameters.USER_DOMAIN));
     }
 
-    public boolean checkErrorMessageWhileLoginWithInvalidCredentials(User user, String expectedErrorMessage) {
-        refreshPage();
-        doLogin(user);
-        String errorMessage = new LoginPage().getErrorMessage();
-        return (errorMessage.equalsIgnoreCase(expectedErrorMessage));
+    public boolean doesInvalidCredentialsErrorMessageMatchExpected(String expectedErrorMessage) {
+        return (new LoginPage().getErrorMessage().equalsIgnoreCase(expectedErrorMessage));
     }
 
     public void doLogout() {

@@ -1,7 +1,10 @@
 package MailRu.pages;
 
 
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 public class MailListPage extends AbstractPage {
@@ -9,7 +12,7 @@ public class MailListPage extends AbstractPage {
     public static final By LETTER_BLOCK_LOCATOR = By.xpath("//div[@data-mnemo='letters']");
     private static final By SPAM_BUTTON_LOCATOR = By.xpath("//div[@data-name='spam']");
     private static final By NO_SPAM_BUTTON_LOCATOR = By.xpath("//div[@data-cache-key='950_undefined_false']//div[@data-name='noSpam']/span");
-    private static final By MAIL_WITH_BLANK_SUBJECT_LOCATOR = By.xpath("(//a[@class='js-href b-datalist__item__link'][not(@data-subject)])[1]");
+    private static final By MAIL_WITH_BLANK_SUBJECT_LOCATOR = By.xpath("(//div[@data-cache-key and not(@style)]//a[contains(@class,'item__link') and not(@data-subject)])[1]");
     private static final String MAIL_BY_SUBJECT_LOCATOR = "//a[@data-subject='%s']";
     private static final String LETTER_CHECKBOX_LOCATOR = "//*[@data-subject='%s']//div[@class='b-checkbox__box']";
     private static final By CONFIRM_SPAM_BUTTON_LOCATOR = By.xpath("//div[@class='is-confirmSpam_in']//button[contains(@class,'confirm-cancel')]");
@@ -23,7 +26,7 @@ public class MailListPage extends AbstractPage {
     }
 
     public ContentLetterPage openLetterWithoutSubject() {
-        waitForElementEnabled(MAIL_WITH_BLANK_SUBJECT_LOCATOR);
+        waitForElementVisible(MAIL_WITH_BLANK_SUBJECT_LOCATOR);
         driver.findElement(MAIL_WITH_BLANK_SUBJECT_LOCATOR).click();
         waitForElementVisible(ContentLetterPage.ADDRESSEE_MAIL_LOCATOR);
         return new ContentLetterPage();

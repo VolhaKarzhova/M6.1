@@ -3,9 +3,8 @@ package YandexDisk.tests;
 
 import YandexDisk.business_objects.User;
 import YandexDisk.pages.LoginPage;
-import YandexDisk.utils.FilesUtils;
+import YandexDisk.services.FileService;
 import YandexDisk.utils.WebDriverSingleton;
-import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -21,14 +20,16 @@ public class BaseTest {
     public File fileToBeDownloaded;
     public File fileActuallyDownloaded;
     public User user;
+    private FileService fileService;
 
 
     @BeforeClass
     public void setUp() throws IOException {
-        expectedFileList = new FilesUtils().createFiles(2);
-        oneFileSelectedList = new FilesUtils().getFileListForOperations(expectedFileList, 1);
-        fileToBeDownloaded = new File(FilesUtils.folder, expectedFileList.get(0).getName());
-        fileActuallyDownloaded = new File(FileUtils.getTempDirectoryPath(),expectedFileList.get(0).getName());
+        fileService = new FileService();
+        expectedFileList = fileService.createFileList(2);
+        oneFileSelectedList = fileService.getFileListForActions(expectedFileList, 1);
+        fileToBeDownloaded = fileService.getFileForDownload(expectedFileList);
+        fileActuallyDownloaded = fileService.getDownloadedFile(expectedFileList);
         loginPage = new LoginPage().open();
         user = new User();
     }
@@ -36,6 +37,6 @@ public class BaseTest {
     @AfterClass
     public void shutDown() throws IOException {
         WebDriverSingleton.kill();
-        new FilesUtils().deleteTempFolder(FilesUtils.folder);
+        fileService.deleteTempFolderWithTempFiles();
     }
 }
