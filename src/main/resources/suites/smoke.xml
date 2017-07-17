@@ -1,0 +1,20 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="MailRuTest" verbose="1" parallel="false">
+    <test name="LoginTest">
+        <classes>
+            <class name="mailRu.tests.LoginTest"></class>
+        </classes>
+    </test>
+
+    <test name="DraftMailTest">
+        <classes>
+            <class name="mailRu.tests.DraftMailTest"></class>
+        </classes>
+    </test>
+
+    <test name="SmokeTest">
+        <classes>
+            <class name="mailRu.tests.CommonMailTest"></class>
+        </classes>
+    </test>
+</suite>
