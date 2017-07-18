@@ -1,18 +1,15 @@
 package mailRu.webdriver;
 
+import mailRu.config.GlobalOptions;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
-import java.io.File;
 
 public class FirefoxDriverCreator extends WebDriverCreator {
 
     @Override
-    public WebDriver createWebDriver(DesiredCapabilities capabilities) {
-        driver = new FirefoxDriver(capabilities);
+    public WebDriver createWebDriver() {
+        System.setProperty("webdriver.gecko.driver", GlobalOptions.instance().getGeckoDriverPath());
+        driver = new FirefoxDriver(WebDriverSettings.getFirefoxProfile());
         return driver;
     }
 }

@@ -30,7 +30,6 @@ public class WebDriverSettings {
         FirefoxProfile firefoxProfile = new FirefoxProfile();
         firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-        capabilities.setCapability("firefox_binary", "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe");
         capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
         return capabilities;
     }

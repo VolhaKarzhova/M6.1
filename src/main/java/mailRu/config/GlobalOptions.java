@@ -29,6 +29,8 @@ public class GlobalOptions {
     private String geckoDriverPath = "./src/main/resources/drivers/geckodriver.exe";
 
 
+
+
     private GlobalOptions() {
     }
 
@@ -57,5 +59,9 @@ public class GlobalOptions {
 
     public String getGeckoDriverPath() {
         return geckoDriverPath;
+    }
+
+    public BrowserType getBrowserType() {
+        return browserType;
     }
 }

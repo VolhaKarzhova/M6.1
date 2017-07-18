@@ -12,7 +12,7 @@ import java.io.IOException;
 public class ChromeDriverCreator extends WebDriverCreator {
 
 	@Override
-	public WebDriver createWebDriver(DesiredCapabilities capabilities) {
+	public WebDriver createWebDriver() {
 		ChromeDriverService service = new ChromeDriverService.Builder().usingDriverExecutable(
 				new File(GlobalOptions.instance().getChromeDriverPath())).build();
 		try {
@@ -20,7 +20,7 @@ public class ChromeDriverCreator extends WebDriverCreator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		driver = new ChromeDriver(service,capabilities);
+		driver = new ChromeDriver(service,WebDriverSettings.getChromeProfile());
 		return driver;
 	}
 }

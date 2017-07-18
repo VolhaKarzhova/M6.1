@@ -7,5 +7,5 @@ public abstract class WebDriverCreator {
 
     protected WebDriver driver;
 
-    public abstract WebDriver createWebDriver(DesiredCapabilities capabilities);
+    public abstract WebDriver createWebDriver();
 }

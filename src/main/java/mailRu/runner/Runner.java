@@ -11,7 +11,6 @@ import java.util.List;
 
 public class Runner {
 
-
     public static void main(String[] args) {
         parseCLiOptions(args);
         configureSuites().run();

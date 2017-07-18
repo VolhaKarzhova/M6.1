@@ -1,8 +1,5 @@
 package mailRu.pages;
 
-import mailRu.webdriver.BrowserType;
-import mailRu.webdriver.WebDriverCreator;
-import mailRu.webdriver.WebDriverSettings;
 import mailRu.webdriver.WebDriverSingleton;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,9 +11,8 @@ public class AbstractPage {
     private static final int WAIT_FOR_ELEMENT_TIMEOUT_SECONDS = 30;
     protected WebDriver driver;
 
-
     protected AbstractPage() {
-        this.driver = WebDriverSingleton.getWebDriverInstance(BrowserType.FIREFOX);
+        this.driver = WebDriverSingleton.getWebDriverInstance();
     }
 
     protected void waitForElementPresent(By locator) {
