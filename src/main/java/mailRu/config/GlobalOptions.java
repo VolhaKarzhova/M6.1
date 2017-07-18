@@ -4,7 +4,10 @@ import com.beust.jcommander.Parameter;
 import mailRu.webdriver.BrowserType;
 
 public class GlobalOptions {
-    public static final String SUITE_PATH = "./src/main/resources/suites/smoke.xml";
+
+    private static final String SUITE_PATH = "./src/main/resources/suites/smoke.xml";
+    private static final String CHROME_DRIVER_PATH = "./src/main/resources/drivers/chromedriver.exe";
+    private static final String GECKO_DRIVER_PATH = "./src/main/resources/drivers/geckodriver.exe";
     private static GlobalOptions instance;
 
     @Parameter(names = {"--host", "-h"}, description = "Host")
@@ -17,19 +20,13 @@ public class GlobalOptions {
     private BrowserType browserType = BrowserType.CHROME;
 
     @Parameter(names = {"--suitePath", "-sp"}, description = "Path to Suite")
-    //private String suitePath = "./suites/smoke.xml";
-    private String suitePath = "./src/main/resources/suites/smoke.xml";
+    private String suitePath = SUITE_PATH;
 
     @Parameter(names = {"--chromePath", "-ch"}, description = "Path to chrome driver")
-    //private String chromeDriverPath = "./drivers/chromedriver.exe";
-    private String chromeDriverPath = "./src/main/resources/drivers/chromedriver.exe";
+    private String chromeDriverPath = CHROME_DRIVER_PATH;
 
     @Parameter(names = {"--fireFoxPath", "-ff"}, description = "Path to geckoDriver")
-    //private String geckoDriverPath = "./drivers/geckodriver.exe";
-    private String geckoDriverPath = "./src/main/resources/drivers/geckodriver.exe";
-
-
-
+    private String geckoDriverPath = GECKO_DRIVER_PATH;
 
     private GlobalOptions() {
     }

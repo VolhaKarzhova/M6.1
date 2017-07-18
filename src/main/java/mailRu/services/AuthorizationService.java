@@ -1,7 +1,7 @@
 package mailRu.services;
 
 
-import mailRu.business_objects.User;
+import mailRu.business_objects.user.User;
 import mailRu.config.GlobalParameters;
 import mailRu.pages.AbstractPage;
 import mailRu.pages.HeaderMenuPage;

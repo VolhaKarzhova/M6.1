@@ -1,6 +1,6 @@
 package mailRu.services;
 
-import mailRu.business_objects.Letter;
+import mailRu.business_objects.letter.Letter;
 import mailRu.pages.*;
 import mailRu.tests.CommonMailTest;
 

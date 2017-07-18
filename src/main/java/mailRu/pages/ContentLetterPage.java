@@ -1,7 +1,8 @@
 package mailRu.pages;
 
 
-import mailRu.business_objects.Letter;
+import mailRu.business_objects.letter.Letter;
+import mailRu.business_objects.letter.LetterBuilder;
 import org.openqa.selenium.By;
 
 public class ContentLetterPage extends AbstractPage {
@@ -14,7 +15,6 @@ public class ContentLetterPage extends AbstractPage {
         String addressee = driver.findElement(ADDRESSEE_MAIL_LOCATOR).getText();
         String subject = driver.findElement(SUBJECT_MAIL_LOCATOR).getText();
         String body = driver.findElement(BODY_MAIL_LOCATOR).getText();
-        return new Letter.LetterBuilder(addressee).setSubject(subject).setBody(body).build();
-        //return new Letter(addressee,subject,body);
+        return new LetterBuilder(addressee).setSubject(subject).setBody(body).build();
     }
 }

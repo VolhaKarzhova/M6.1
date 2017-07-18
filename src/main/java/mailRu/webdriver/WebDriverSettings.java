@@ -28,7 +28,6 @@ public class WebDriverSettings {
     public static DesiredCapabilities getFirefoxProfile() {
         System.setProperty("webdriver.gecko.driver", GlobalOptions.instance().getGeckoDriverPath());
         FirefoxProfile firefoxProfile = new FirefoxProfile();
-        firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();
         capabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
         return capabilities;

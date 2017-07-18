@@ -1,8 +1,8 @@
 package mailRu.tests;
 
-import mailRu.business_objects.Letter;
+import mailRu.business_objects.letter.Letter;
+import mailRu.business_objects.letter.LetterBuilder;
 import mailRu.services.AuthorizationService;
-import mailRu.services.LetterService;
 import mailRu.services.MailService;
 import mailRu.utils.RandomUtils;
 import mailRu.utils.Utils;
@@ -13,15 +13,15 @@ public class DraftMailTest extends BaseTest {
 
     private MailService mailService = new MailService();
     private AuthorizationService authorizationService = new AuthorizationService();
-    private LetterService letterService = new LetterService();
-    private Letter draftLetter = letterService.createLetterWithAllFilledInputs();
+    private Letter draftLetter = new LetterBuilder(Utils.getAddressee())
+            .setSubject(RandomUtils.getLetterSubject()).setBody(RandomUtils.getLetterBody()).build();
 
     @Test(description = "Check letter is saved in Draft Folder")
     public void saveDraftLetter() {
         authorizationService.doLogin(LoginTest.VALID_USER_ACCOUNT);
         mailService.saveDraftLetter(draftLetter);
         boolean isLetterVisible = mailService.isLetterVisibleInDraftFolder(draftLetter);
-        Assert.assertTrue(isLetterVisible, "Letter is not in the Draft Folder");
+        Assert.assertTrue(isLetterVisible, "letter is not in the Draft Folder");
     }
 
     @Test(description = "Check that deleted letter is not in the Draft Folder", dependsOnMethods = "saveDraftLetter")

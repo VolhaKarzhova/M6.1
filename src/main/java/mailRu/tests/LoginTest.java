@@ -1,6 +1,6 @@
 package mailRu.tests;
 
-import mailRu.business_objects.User;
+import mailRu.business_objects.user.User;
 import mailRu.config.GlobalParameters;
 import mailRu.services.AuthorizationService;
 import mailRu.utils.RandomUtils;
