@@ -1,8 +1,9 @@
 package mailRu.services;
 
 
+import mailRu.business_objects.user.AbstractUser;
 import mailRu.business_objects.user.User;
-import mailRu.config.GlobalParameters;
+import mailRu.business_objects.user.UserLoginDecorator;
 import mailRu.pages.AbstractPage;
 import mailRu.pages.HeaderMenuPage;
 import mailRu.pages.LoginPage;
@@ -10,11 +11,15 @@ import mailRu.pages.LoginPage;
 public class AuthorizationService extends AbstractPage {
 
     public void doLogin(User user) {
-        new LoginPage().login(user.getLoginPart(), user.getPassword());
+        try {
+            new LoginPage().login(user.getLoginPart(), user.getPassword());
+        } catch (Exception e) {
+        }
     }
 
     public boolean isUserLoginAfterAuthorizationExpected(User user) {
-        return (new HeaderMenuPage().getUserLogin().equalsIgnoreCase(user.getLoginPart() + GlobalParameters.USER_DOMAIN));
+        AbstractUser decoratedUser = new UserLoginDecorator(user);
+        return (new HeaderMenuPage().getUserLogin().equalsIgnoreCase(decoratedUser.getLoginPart()));
     }
 
     public boolean isInvalidCredentialsErrorMessageExpected(String expectedErrorMessage) {

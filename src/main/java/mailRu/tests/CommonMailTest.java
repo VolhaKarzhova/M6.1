@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 public class CommonMailTest extends BaseTest {
 
     private MailService mailService = new MailService();
+    private AuthorizationService authorizationService = new AuthorizationService();
     private Letter receivedBlankLetter = new LetterBuilder(Utils.getAddressee()).setSubject(GlobalParameters.BLANK_LETTER_SUBJECT_STRING)
             .setBody(GlobalParameters.EMPTY_STRING).build();
     private Letter letterWithOnlyAddressee = new LetterBuilder(Utils.getAddressee()).build();
@@ -26,9 +27,10 @@ public class CommonMailTest extends BaseTest {
 
     @Test(description = "Check the possibility to create new letter and send it")
     public void sendNewMailWithAllFilledInputs() {
+        authorizationService.doLogin(LoginTest.VALID_USER_ACCOUNT);
         mailService.sendLetterWithAllFilledInputs(letterWithAllFieldsFilled);
-        boolean doesAddresseeMatch = mailService.isAddresseeInSuccessfulSendLetterMessageExpected(letterWithAllFieldsFilled);
-        Assert.assertTrue(doesAddresseeMatch, "Addressee of the sent letter doesn't match");
+        boolean isAddresseeExpected = mailService.isAddresseeInSuccessfulSendLetterMessageExpected(letterWithAllFieldsFilled);
+        Assert.assertTrue(isAddresseeExpected, "Addressee of the sent letter doesn't match");
     }
 
     @Test(description = "Check that letter presents in the Sent Folder", dependsOnMethods = "sendNewMailWithAllFilledInputs")
@@ -79,8 +81,8 @@ public class CommonMailTest extends BaseTest {
     @Test(description = "Check that sending mail with no setSubject and setBody was successful", dependsOnMethods = "isExpectedAlertVisibleWhileSendingLetterWithOnlyAddresseeFilled")
     public void sendMailWithBlankSubjectAndBodyInputs() {
         mailService.confirmSendingLetterOnAlert();
-        boolean doesAddresseeMatch = mailService.isAddresseeInSuccessfulSendLetterMessageExpected(letterWithOnlyAddressee);
-        Assert.assertTrue(doesAddresseeMatch, "Addressee of the sent letter doesn't match");
+        boolean isAddresseeExpected = mailService.isAddresseeInSuccessfulSendLetterMessageExpected(letterWithOnlyAddressee);
+        Assert.assertTrue(isAddresseeExpected, "Addressee of the sent letter doesn't match");
     }
 
     @Test(description = "Check that letter without Subject and Body presents in the Sent Folder", dependsOnMethods = "sendMailWithBlankSubjectAndBodyInputs")
@@ -98,7 +100,7 @@ public class CommonMailTest extends BaseTest {
     @Test(description = "Check invalid Addressee alert message", dependsOnMethods = "checkLetterWithOnlyAddresseeFilledInInboxFolder")
     public void sendMailWithInvalidAddressee() {
         mailService.sendLetterWithAllFilledInputs(letterWithInvalidAddressee);
-        boolean doesAlertMessageMatch = mailService.isAlertMessageExpectedWhileSendingLetterWithInvalidAddressee();
-        Assert.assertTrue(doesAlertMessageMatch, "Text of alert doesn't match");
+        boolean isAlertMessageExpected = mailService.isAlertMessageExpectedWhileSendingLetterWithInvalidAddressee();
+        Assert.assertTrue(isAlertMessageExpected, "Text of alert doesn't match");
     }
 }

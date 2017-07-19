@@ -1,6 +1,6 @@
 package mailRu.business_objects.user;
 
-public class User {
+public class User extends AbstractUser {
 
     private String login;
     private String password;
@@ -10,10 +10,12 @@ public class User {
         this.password = password;
     }
 
+    @Override
     public String getLoginPart() {
         return login;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }

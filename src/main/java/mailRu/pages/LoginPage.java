@@ -30,4 +30,8 @@ public class LoginPage extends AbstractPage {
         waitForElementVisible(AUTHENTICATION_ERROR_MESSAGE_LOCATOR);
         return driver.findElement(AUTHENTICATION_ERROR_MESSAGE_LOCATOR).getText();
     }
+
+    public boolean isLoginInputPresent() {
+        return driver.findElement(LOGIN_INPUT_LOCATOR).isDisplayed();
+    }
 }
