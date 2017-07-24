@@ -23,16 +23,16 @@ public class LoginTest extends BaseTest {
     @Test(description = "Check displayed username for logged user USER")
     public void loginWithValidCredentials() {
         authorizationService.doLogin(VALID_USER_ACCOUNT);
-        boolean doesUserLoginMatch = authorizationService.isUserLoginAfterAuthorizationExpected(VALID_USER_ACCOUNT);
-        Assert.assertTrue(doesUserLoginMatch, "Login wasn't successful");
+        boolean isUserLoginExpected = authorizationService.isUserLoginAfterAuthorizationExpected(VALID_USER_ACCOUNT);
+        Assert.assertTrue(isUserLoginExpected, "Login wasn't successful");
     }
 
     @Test(dataProvider = "credentialsDataProvider", priority = 1, description = "Check error messages match entered invalid credentials")
     @Parameters({"doLogin", "password", "expectedErrorMessage"})
-    public void loginWithInvalidLogin(String login, String password, String expectedErrorMessage) {
+    public void loginWithInvalidCredentials(String login, String password, String expectedErrorMessage) {
         authorizationService.doLogin(new User(login, password));
-        boolean doesErrorMessageMatch = authorizationService.isInvalidCredentialsErrorMessageExpected(expectedErrorMessage);
-        Assert.assertTrue(doesErrorMessageMatch, "Error message doesn't match: " + expectedErrorMessage);
+        boolean isErrorMessageExpected = authorizationService.isInvalidCredentialsErrorMessageExpected(expectedErrorMessage);
+        Assert.assertTrue(isErrorMessageExpected, "Error message doesn't match: " + expectedErrorMessage);
     }
 
     @DataProvider(name = "credentialsDataProvider")
