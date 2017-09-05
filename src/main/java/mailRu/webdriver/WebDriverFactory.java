@@ -21,10 +21,10 @@ public class WebDriverFactory {
                 driver = webDriverCreator.createWebDriver();
                 break;
             default:
-                throw new RuntimeException("Browser type unsupported");
+                throw new RuntimeException("this type unsupported");
         }
-        driver.manage().timeouts().pageLoadTimeout(25, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(25, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         return driver;
     }

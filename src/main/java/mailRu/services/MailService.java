@@ -2,16 +2,19 @@ package mailRu.services;
 
 import mailRu.business_objects.letter.Letter;
 import mailRu.pages.*;
+import mailRu.reporting.Logger;
 import mailRu.tests.CommonMailTest;
 
 public class MailService extends AbstractPage {
 
     public void moveLetterToSpam(Letter letter) {
+        Logger.info("Moving letter with subject " + letter.getSubject() + " to Spam folder");
         MailListPage mailListPage = new LeftMenuPage().openInboxFolder();
         mailListPage.clickLetterCheckbox(letter.getSubject()).clickSpamButton(letter.getSubject());
     }
 
     public void moveLetterFromSpam(Letter letter) {
+        Logger.info("Moving letter with subject " + letter.getSubject() + " from Spam folder");
         MailListPage mailListPage = new LeftMenuPage().openSpamFolder();
         mailListPage.clickLetterCheckbox(letter.getSubject()).clickNoSpamButton(letter.getSubject());
     }

@@ -1,6 +1,7 @@
 package mailRu.pages;
 
 
+import mailRu.reporting.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
@@ -19,54 +20,63 @@ public class MailListPage extends AbstractPage {
     private static final By DELETE_OPTION_IN_CONTEXT_MENU_LOCATOR = By.xpath("//a[@data-name='remove']");
 
     public ContentLetterPage openLetterBySubject(String subject) {
+        Logger.info("Opening letter by the subject " + subject);
         waitForElementEnabled(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
-        driver.findElement(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject))).click();
+        click(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         waitForElementVisible(ContentLetterPage.ADDRESSEE_MAIL_LOCATOR);
         return new ContentLetterPage();
     }
 
     public ContentLetterPage openLetterWithoutSubject() {
+        Logger.info("Opening letter without subject");
         waitForElementVisible(MAIL_WITH_BLANK_SUBJECT_LOCATOR);
-        driver.findElement(MAIL_WITH_BLANK_SUBJECT_LOCATOR).click();
+        click(MAIL_WITH_BLANK_SUBJECT_LOCATOR);
         waitForElementVisible(ContentLetterPage.ADDRESSEE_MAIL_LOCATOR);
         return new ContentLetterPage();
     }
 
     public boolean isLetterVisible(String subject) {
+        Logger.info("Check if letter with subject " + subject + " is visible in current folder");
         try {
             waitForElementVisible(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
             driver.findElement(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject))).isDisplayed();
             return true;
         } catch (TimeoutException exception) {
+            Logger.warn("Timeout exception has appeared. It might be expected behavior");
         } catch (NoSuchElementException exception) {
+            Logger.warn("NoSuchElement exception has appeared.It might be expected behavior");
         }
         return false;
     }
 
     public MailListPage clickLetterCheckbox(String subject) {
+        Logger.info("Check the check-box of the letter with subject: " + subject);
         waitForElementVisible(By.xpath(String.format(LETTER_CHECKBOX_LOCATOR, subject)));
-        driver.findElement(By.xpath(String.format(LETTER_CHECKBOX_LOCATOR, subject))).click();
+        click(By.xpath(String.format(LETTER_CHECKBOX_LOCATOR, subject)));
         return new MailListPage();
     }
 
     public MailListPage deleteLetter(String subject) {
+        Logger.info("Deleting the letter with the subject: " + subject);
         WebElement letter = driver.findElement(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         new Actions(driver).contextClick(letter).build().perform();
-        driver.findElement(DELETE_OPTION_IN_CONTEXT_MENU_LOCATOR).click();
+        click(DELETE_OPTION_IN_CONTEXT_MENU_LOCATOR);
         waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         return new MailListPage();
     }
 
     public MailListPage clickNoSpamButton(String subject) {
-        driver.findElement(NO_SPAM_BUTTON_LOCATOR).click();
+        Logger.info("Clicking No spam Button");
+        click(NO_SPAM_BUTTON_LOCATOR);
         waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         return new MailListPage();
     }
 
     public MailListPage clickSpamButton(String subject) {
-        driver.findElement(SPAM_BUTTON_LOCATOR).click();
+        Logger.info("Clicking SPAM button together and further confirmation button");
+        click(SPAM_BUTTON_LOCATOR);
         waitForElementEnabled(CONFIRM_SPAM_BUTTON_LOCATOR);
-        driver.findElement(CONFIRM_SPAM_BUTTON_LOCATOR).click();
+        click(CONFIRM_SPAM_BUTTON_LOCATOR);
         waitForElementDisappear(By.xpath(String.format(MAIL_BY_SUBJECT_LOCATOR, subject)));
         return new MailListPage();
     }

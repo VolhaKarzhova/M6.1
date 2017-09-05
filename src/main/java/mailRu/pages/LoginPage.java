@@ -1,6 +1,7 @@
 package mailRu.pages;
 
 import mailRu.config.GlobalParameters;
+import mailRu.reporting.Logger;
 import org.openqa.selenium.By;
 
 public class LoginPage extends AbstractPage {
@@ -11,27 +12,24 @@ public class LoginPage extends AbstractPage {
     public static final By LOGIN_BUTTON_LOCATOR = By.className("mailbox__auth__button");
 
     public LoginPage open() {
-        driver.get(GlobalParameters.URL);
+        open(GlobalParameters.URL);
         return this;
     }
 
     public HeaderMenuPage login(String login, String password) {
+        Logger.info("Login started");
         refreshPage();
-        waitForElementVisible(LOGIN_INPUT_LOCATOR);
-        driver.findElement(LOGIN_INPUT_LOCATOR).clear();
-        driver.findElement(LOGIN_INPUT_LOCATOR).sendKeys(login);
-        driver.findElement(PASSWORD_INPUT_LOCATOR).clear();
-        driver.findElement(PASSWORD_INPUT_LOCATOR).sendKeys(password);
-        driver.findElement(LOGIN_BUTTON_LOCATOR).click();
+        clear(LOGIN_INPUT_LOCATOR);
+        type(LOGIN_INPUT_LOCATOR, login);
+        clear(PASSWORD_INPUT_LOCATOR);
+        type(PASSWORD_INPUT_LOCATOR, password);
+        click(LOGIN_BUTTON_LOCATOR);
+        Logger.info("Login finished");
         return new HeaderMenuPage();
     }
 
     public String getErrorMessage() {
-        waitForElementVisible(AUTHENTICATION_ERROR_MESSAGE_LOCATOR);
-        return driver.findElement(AUTHENTICATION_ERROR_MESSAGE_LOCATOR).getText();
-    }
-
-    public boolean isLoginInputPresent() {
-        return driver.findElement(LOGIN_INPUT_LOCATOR).isDisplayed();
+        Logger.info("Getting authentication error message");
+        return getElementText(AUTHENTICATION_ERROR_MESSAGE_LOCATOR);
     }
 }

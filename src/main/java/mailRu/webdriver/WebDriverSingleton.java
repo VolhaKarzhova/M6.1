@@ -1,5 +1,6 @@
 package mailRu.webdriver;
 
+import mailRu.reporting.Logger;
 import org.openqa.selenium.WebDriver;
 
 public class WebDriverSingleton extends WebDriverFactory {
@@ -10,6 +11,7 @@ public class WebDriverSingleton extends WebDriverFactory {
     }
 
     public static WebDriver getWebDriverInstance() {
+        Logger.trace("Getting WebDriver instance");
         if (instance != null) {
             return instance;
         }
@@ -22,6 +24,7 @@ public class WebDriverSingleton extends WebDriverFactory {
                 instance.quit();
             } catch (Exception e) {
             } finally {
+                Logger.trace("WebDriver quits");
                 instance = null;
             }
         }

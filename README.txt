@@ -1,1 +1,1 @@
-Home task for the Module 5.3 within CDP program
+Home task for the Module 6.1 within CDP program

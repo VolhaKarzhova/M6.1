@@ -1,5 +1,6 @@
 package mailRu.pages;
 
+import mailRu.reporting.Logger;
 import org.openqa.selenium.By;
 
 public class LeftMenuPage extends AbstractPage {
@@ -12,37 +13,42 @@ public class LeftMenuPage extends AbstractPage {
     private static final By CLEAR_FOLDER_LOCATOR = By.xpath("//button[@data-name='clearFolder']");
 
     public MailListPage openInboxFolder() {
+        Logger.info("Opening Inbox Folder");
         waitForElementEnabled(INBOX_MAIL_FOLDER_LOCATOR);
-        driver.findElement(INBOX_MAIL_FOLDER_LOCATOR).click();
+        click(INBOX_MAIL_FOLDER_LOCATOR);
         waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
         return new MailListPage();
     }
 
     public MailListPage openSentFolder() {
+        Logger.info("Opening Sent Folder");
         waitForElementEnabled(SENT_MAIL_FOLDER_LOCATOR);
-        driver.findElement(SENT_MAIL_FOLDER_LOCATOR).click();
+        click(SENT_MAIL_FOLDER_LOCATOR);
         waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
         return new MailListPage();
     }
 
     public MailListPage openDraftFolder() {
+        Logger.info("Opening Draft Folder");
         waitForElementEnabled(DRAFT_MAIL_FOLDER_LOCATOR);
-        driver.findElement(DRAFT_MAIL_FOLDER_LOCATOR).click();
+        click(DRAFT_MAIL_FOLDER_LOCATOR);
         waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
         return new MailListPage();
     }
 
     public MailListPage openDeletedFolder() {
+        Logger.info("Opening Trash Folder");
         waitForElementEnabled(DELETED_MAIL_FOLDER_LOCATOR);
-        driver.findElement(DELETED_MAIL_FOLDER_LOCATOR).click();
+        click(DELETED_MAIL_FOLDER_LOCATOR);
         waitForElementPresent(MailListPage.LETTER_BLOCK_LOCATOR);
         return new MailListPage();
     }
 
     public MailListPage openSpamFolder() {
         refreshPage();
+        Logger.info("Opening Spam Folder");
         waitForElementEnabled(SPAM_MAIL_FOLDER_LOCATOR);
-        driver.findElement(SPAM_MAIL_FOLDER_LOCATOR).click();
+        click(SPAM_MAIL_FOLDER_LOCATOR);
         waitForElementVisible(CLEAR_FOLDER_LOCATOR);
         return new MailListPage();
     }

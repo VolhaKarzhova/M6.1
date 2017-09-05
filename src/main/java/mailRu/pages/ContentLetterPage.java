@@ -3,6 +3,7 @@ package mailRu.pages;
 
 import mailRu.business_objects.letter.Letter;
 import mailRu.business_objects.letter.LetterBuilder;
+import mailRu.reporting.Logger;
 import org.openqa.selenium.By;
 
 public class ContentLetterPage extends AbstractPage {
@@ -12,6 +13,7 @@ public class ContentLetterPage extends AbstractPage {
     private static final By BODY_MAIL_LOCATOR = By.xpath("//div[contains(@id, 'BODY')]");
 
     public Letter getLetter() {
+        Logger.debug("Creating Letter as an object");
         String addressee = driver.findElement(ADDRESSEE_MAIL_LOCATOR).getText();
         String subject = driver.findElement(SUBJECT_MAIL_LOCATOR).getText();
         String body = driver.findElement(BODY_MAIL_LOCATOR).getText();
