@@ -1,0 +1,6 @@
+[2017-09-06 00:35:39,799] WARN - Timeout exception has appeared. It might be expected behavior
+[2017-09-06 00:35:39,865] INFO - Opening Trash Folder
+[2017-09-06 00:35:39,977] DEBUG - Clicking element located: By.xpath: //div[@data-id='500002']
+[2017-09-06 00:35:40,235] INFO - Check if letter with subject mail number: 51827 is visible in current folder
+[2017-09-06 00:35:40,637] INFO - Deleting the letter with the subject: mail number: 51827
+[2017-09-06 00:35:40,754] DEBUG - Clicking element located: By.xpath: //a[@data-name='remove']

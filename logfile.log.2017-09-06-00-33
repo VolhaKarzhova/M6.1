@@ -1,0 +1,10 @@
+[2017-09-06 00:33:12,674] INFO - Going to URL: https://mail.ru
+[2017-09-06 00:33:23,381] INFO - Login started
+[2017-09-06 00:33:32,638] DEBUG - Clearing the input located: By.id: mailbox__login
+[2017-09-06 00:33:32,823] DEBUG - Typing text 'volhakarzhova' to input form located: By.id: mailbox__login
+[2017-09-06 00:33:33,027] DEBUG - Clearing the input located: By.cssSelector: #mailbox__password
+[2017-09-06 00:33:33,183] DEBUG - Typing text '1584624Qwe' to input form located: By.cssSelector: #mailbox__password
+[2017-09-06 00:33:33,361] DEBUG - Clicking element located: By.className: mailbox__auth__button
+[2017-09-06 00:33:33,578] INFO - Login finished
+[2017-09-06 00:33:33,580] INFO - Creating the new letter has started
+[2017-09-06 00:33:33,581] DEBUG - Clicking element located: By.cssSelector: a[data-name='compose']

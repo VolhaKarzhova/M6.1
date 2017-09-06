@@ -1,0 +1,10 @@
+[2017-09-06 00:10:11,824] INFO - Going to URL: https://mail.ru
+[2017-09-06 00:10:18,787] INFO - Login started
+[2017-09-06 00:10:24,050] DEBUG - Clearing the input located: By.id: mailbox__login
+[2017-09-06 00:10:24,208] DEBUG - Typing text 'volhakarzhova' to input form located: By.id: mailbox__login
+[2017-09-06 00:10:24,495] DEBUG - Clearing the input located: By.cssSelector: #mailbox__password
+[2017-09-06 00:10:24,660] DEBUG - Typing text '1584624Qwe' to input form located: By.cssSelector: #mailbox__password
+[2017-09-06 00:10:24,860] DEBUG - Clicking element located: By.className: mailbox__auth__button
+[2017-09-06 00:10:25,017] INFO - Login finished
+[2017-09-06 00:10:25,019] INFO - Creating the new letter has started
+[2017-09-06 00:10:55,856] ERROR - saveDraftLetter screenshot saved: ./target/screenshots/0.png

@@ -50,24 +50,24 @@ public class AbstractPage {
     }
 
     public void click(final By locator) {
-        waitForElementVisible(locator);
         Logger.debug("Clicking element located: " + locator);
+        waitForElementVisible(locator);
         highlightElement(locator);
         unHighlightElement(locator);
         driver.findElement(locator).click();
     }
 
     public void type(final By locator, String text) {
+        Logger.debug("Typing text '" + text + "' to input form located: " + locator);
         waitForElementVisible(locator);
         highlightElement(locator);
-        Logger.debug("Typing text '" + text + "' to input form located: " + locator);
         driver.findElement(locator).sendKeys(text);
         unHighlightElement(locator);
     }
 
     public void clear(final By locator) {
-        waitForElementVisible(locator);
         Logger.debug("Clearing the input located: " + locator);
+        waitForElementVisible(locator);
         highlightElement(locator);
         unHighlightElement(locator);
         driver.findElement(locator).clear();
@@ -77,8 +77,8 @@ public class AbstractPage {
         waitForElementVisible(locator);
         boolean succeed = !driver.findElement(locator).getText().isEmpty();
         if (succeed) {
-            highlightElement(locator);
             Logger.debug("Actual result: " + driver.findElement(locator).getText());
+            highlightElement(locator);
             unHighlightElement(locator);
         } else Logger.error("Can't get text from the element by locator " + locator);
         return driver.findElement(locator).getText();

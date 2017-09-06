@@ -1,0 +1,11 @@
+[2017-09-05 22:25:16,005] DEBUG - Clicking element located: By.cssSelector: a[data-name='compose']
+[2017-09-05 22:25:16,591] INFO - Filling all letter inputs started
+[2017-09-05 22:25:17,218] DEBUG - Typing text 'volhakarzhova@mail.ru' to input form located: By.xpath: //*[@data-original-name='To']
+[2017-09-05 22:25:17,938] DEBUG - Typing text 'mail number: 86648' to input form located: By.name: Subject
+[2017-09-05 22:25:20,697] DEBUG - Typing text 'This is a new email 20330' to input form located: By.cssSelector: #tinymce
+[2017-09-05 22:25:21,013] INFO - Saving letter as a draft by clicking Draft button
+[2017-09-05 22:25:21,077] DEBUG - Clicking element located: By.xpath: //div[contains(@data-name, 'saveDraft')]
+[2017-09-05 22:25:22,512] INFO - Opening Draft Folder
+[2017-09-05 22:25:23,219] DEBUG - Clicking element located: By.xpath: //div[@data-id='500001']
+[2017-09-05 22:25:23,531] INFO - Check if letter with subject mail number: 86648 is visible in current folder
+[2017-09-05 22:25:35,899] ERROR - saveDraftLetter screenshot saved: ./target/screenshots/0.png

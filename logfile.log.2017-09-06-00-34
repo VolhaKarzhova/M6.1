@@ -1,0 +1,14 @@
+[2017-09-06 00:34:08,892] INFO - Filling all letter inputs started
+[2017-09-06 00:34:08,916] DEBUG - Typing text 'volhakarzhova@mail.ru' to input form located: By.xpath: //*[@data-original-name='To']
+[2017-09-06 00:34:12,127] DEBUG - Typing text 'mail number: 51827' to input form located: By.name: Subject
+[2017-09-06 00:34:12,547] DEBUG - Typing text 'This is a new email 96297' to input form located: By.cssSelector: #tinymce
+[2017-09-06 00:34:12,901] INFO - Saving letter as a draft by clicking Draft button
+[2017-09-06 00:34:12,902] DEBUG - Clicking element located: By.xpath: //div[contains(@data-name, 'saveDraft')]
+[2017-09-06 00:34:14,292] INFO - Opening Draft Folder
+[2017-09-06 00:34:14,376] DEBUG - Clicking element located: By.xpath: //div[@data-id='500001']
+[2017-09-06 00:34:14,647] INFO - Check if letter with subject mail number: 51827 is visible in current folder
+[2017-09-06 00:34:15,569] INFO - Deleting the letter with the subject: mail number: 51827
+[2017-09-06 00:34:15,716] DEBUG - Clicking element located: By.xpath: //a[@data-name='remove']
+[2017-09-06 00:34:48,866] INFO - Opening Draft Folder
+[2017-09-06 00:34:48,947] DEBUG - Clicking element located: By.xpath: //div[@data-id='500001']
+[2017-09-06 00:34:49,181] INFO - Check if letter with subject mail number: 51827 is visible in current folder

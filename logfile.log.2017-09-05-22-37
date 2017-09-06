@@ -1,0 +1,10 @@
+[2017-09-05 22:37:36,462] INFO - Going to URL: https://mail.ru
+[2017-09-05 22:37:46,584] INFO - Login started
+[2017-09-05 22:37:52,493] DEBUG - Clearing the input located: By.id: mailbox__login
+[2017-09-05 22:37:52,649] DEBUG - Typing text 'volhakarzhova' to input form located: By.id: mailbox__login
+[2017-09-05 22:37:52,865] DEBUG - Clearing the input located: By.cssSelector: #mailbox__password
+[2017-09-05 22:37:53,005] DEBUG - Typing text '1584624Qwe' to input form located: By.cssSelector: #mailbox__password
+[2017-09-05 22:37:53,183] DEBUG - Clicking element located: By.className: mailbox__auth__button
+[2017-09-05 22:37:53,335] INFO - Login finished
+[2017-09-05 22:37:53,339] DEBUG - Expected user login displayed is volhakarzhova@mail.ru
+[2017-09-05 22:37:53,339] INFO - Getting user login after authorization
